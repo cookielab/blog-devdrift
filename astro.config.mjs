@@ -3,8 +3,10 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://cookielab.github.io',
-  base: '/blog-devdrift',
+  site: process.env.GITHUB_ACTIONS
+    ? 'https://cookielab.github.io'
+    : 'http://localhost:4321',
+  base: process.env.GITHUB_ACTIONS ? '/blog-devdrift' : '/',
   output: 'static',
   integrations: [react()],
   vite: {
