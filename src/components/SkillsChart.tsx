@@ -72,9 +72,9 @@ export default function SkillsChart({ activeCategories, hiddenSkills }: SkillsCh
 
   useEffect(() => {
     Promise.all([
-      fetch(`${import.meta.env.BASE_URL}/data/skills-timeline.json`).then(r => r.json()),
-      fetch(`${import.meta.env.BASE_URL}/data/categories.json`).then(r => r.json()),
-      fetch(`${import.meta.env.BASE_URL}/data/key-events.json`).then(r => r.json()),
+      fetch(`${import.meta.env.BASE_URL}data/skills-timeline.json`).then(r => r.json()),
+      fetch(`${import.meta.env.BASE_URL}data/categories.json`).then(r => r.json()),
+      fetch(`${import.meta.env.BASE_URL}data/key-events.json`).then(r => r.json()),
     ]).then(([skillData, catData, eventsData]) => {
       setSkills(skillData.skills);
       setCategories(catData);

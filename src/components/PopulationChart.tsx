@@ -17,7 +17,7 @@ export default function PopulationChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}/data/population-data.json`)
+    fetch(`${import.meta.env.BASE_URL}data/population-data.json`)
       .then(r => r.json())
       .then(data => {
         const ctx = canvasRef.current?.getContext('2d');
