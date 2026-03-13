@@ -3,7 +3,7 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://cookielab.github.io',
+  site: 'https://cookielab.github.io/blog-devdrift/',
   output: 'static',
   integrations: [react()],
   vite: {
