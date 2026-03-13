@@ -2,6 +2,8 @@
 
 > How the programming profession changed · 1970–2026
 
+**Live site: [devdrift.net](https://devdrift.net)**
+
 An open-source, static site visualising how senior developer skill expectations evolved over 56 years. Four interactive Chart.js charts, Cookielab brand, powered by community data.
 
 **Powered by [Cookielab](https://cookielab.io) & [Pavel Žák](https://github.com/ReadyPlayerNaN) — giving back to the developer community.**
