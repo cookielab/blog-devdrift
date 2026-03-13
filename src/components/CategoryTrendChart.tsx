@@ -28,7 +28,7 @@ export default function CategoryTrendChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/skills-timeline.json`)
+    fetch(`${import.meta.env.BASE_URL}/data/skills-timeline.json`)
       .then(r => r.json())
       .then(data => {
         const ctx = canvasRef.current?.getContext('2d');

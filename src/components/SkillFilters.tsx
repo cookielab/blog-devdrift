@@ -32,7 +32,7 @@ export default function SkillFilters() {
   const [userFilteredCategories, setUserFilteredCategories] = useState(false);
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/skills-timeline.json`)
+    fetch(`${import.meta.env.BASE_URL}/data/skills-timeline.json`)
       .then(r => r.json())
       .then(data => {
         setSkillsList(data.skills.map((s: any) => ({ name: s.name, category: s.category })));
