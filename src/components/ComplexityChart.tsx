@@ -24,7 +24,7 @@ export default function ComplexityChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    fetch('/data/complexity-data.json')
+    fetch(`${import.meta.env.BASE_URL}data/complexity-data.json`)
       .then(r => r.json())
       .then(data => {
         const ctx = canvasRef.current?.getContext('2d');
