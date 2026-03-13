@@ -4,9 +4,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: process.env.GITHUB_ACTIONS
-    ? 'https://cookielab.github.io'
+    ? 'https://devdrift.net'
     : 'http://localhost:4321',
-  base: process.env.GITHUB_ACTIONS ? '/blog-devdrift/' : '/',
+  base: '/',
   output: 'static',
   integrations: [react()],
   vite: {
