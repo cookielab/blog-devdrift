@@ -1,6 +1,6 @@
 {
   "meta": {
-    "description": "Senior developer skill expectations 1970–2026, scale 0–10 (logistic S-curve model). 0 = irrelevant/non-existent, 5 = useful but not required, 8 = expected of a senior, 10 = table-stakes standard.",
+    "description": "Senior developer skill expectations 1970–2026, scale 0–10 (logistic S-curve model). 0 = irrelevant/non-existent, 5 = useful but not required, 8 = required from a senior, 10 = expectation baseline.",
     "model": "Heuristic logistic S-curve. Not absolute truth.",
     "validated_against": "Stack Overflow Dev Surveys, JetBrains Dev Ecosystem, DORA, CNCF, Martin Fowler",
     "source": "Synchronized with Pavel Žák's presentation data (March 2026)"

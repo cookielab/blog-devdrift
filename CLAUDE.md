@@ -73,7 +73,7 @@ devdrift/
   ]
 }
 ```
-Scale: 0 = irrelevant, 5 = useful not required, 8 = expected of senior, 10 = table-stakes standard.
+Scale: 0 = irrelevant, 5 = useful not required, 8 = required from a senior, 10 = expectation baseline.
 Values follow a logistic S-curve from 0 to plateau.
 
 ## Chart islands pattern

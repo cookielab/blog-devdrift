@@ -370,8 +370,8 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
               callback: (v: any) => {
                 if (isMobileNow) return String(v);
                 if (v === 5) return '5 – useful';
-                if (v === 8) return '8 – expected';
-                if (v === 10) return '10 – standard';
+                if (v === 8) return '8 – required';
+                if (v === 10) return '10 – baseline';
                 return String(v);
               },
             },
@@ -457,8 +457,8 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
           {[
             { bg: '#475569', label: '0 – non-existent' },
             { bg: '#64748b', label: '5 – useful, not required' },
-            { bg: '#94a3b8', label: '8 – expected of a senior' },
-            { bg: '#F2F0E5', label: '10 – table-stakes standard' },
+            { bg: '#94a3b8', label: '8 – required from a senior' },
+            { bg: '#F2F0E5', label: '10 – expectation baseline' },
           ].map(item => (
             <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.85rem', color: '#64748b' }}>
               <span style={{ display: 'inline-block', width: 28, height: 5, borderRadius: 3, background: item.bg, flexShrink: 0, lineHeight: 0, verticalAlign: 'middle' }} />
