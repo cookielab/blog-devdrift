@@ -1,7 +1,7 @@
 # DevDrift — CLAUDE.md
 
 ## What this project is
-devdrift.dev — an open-source, static site documenting how senior developer skill expectations changed from 1970 to 2026. Powered by Cookielab & Pavel Žák.
+devdrift.dev — an open-source, static site documenting how senior developer skill expectations changed from 1970 to 2026. Powered by Cookielab.
 
 ## Stack
 - **Astro 5.x** — static output (`output: 'static'`)
