@@ -87,20 +87,10 @@ export default function CategoryTrendChart() {
     const rect = canvas.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
 
-    // Chart.js radial scale center and drawing radius in canvas pixels
-    const cxCanvas = rScale.xCenter;
-    const cyCanvas = rScale.yCenter;
-    const drawingRadius = rScale.drawingArea;
-
-    // Convert canvas pixels to CSS pixels relative to container
-    const scaleX = rect.width / canvas.width;
-    const scaleY = rect.height / canvas.height;
-    const offsetX = rect.left - containerRect.left;
-    const offsetY = rect.top - containerRect.top;
-
-    const cx = cxCanvas * scaleX + offsetX;
-    const cy = cyCanvas * scaleY + offsetY;
-    const radius = drawingRadius * Math.min(scaleX, scaleY);
+    // Chart.js coordinates are already in CSS-pixel space (it applies ctx.scale(dpr, dpr) internally)
+    const cx = rScale.xCenter + (rect.left - containerRect.left);
+    const cy = rScale.yCenter + (rect.top - containerRect.top);
+    const radius = rScale.drawingArea;
 
     const labelOffset = isMobile ? 18 : 24;
     setLabelPositions(getLabelPositions(cx, cy, radius, CAT_KEYS.length, labelOffset));
