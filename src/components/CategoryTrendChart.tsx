@@ -313,7 +313,7 @@ export default function CategoryTrendChart() {
       {/* Chart with HTML label overlays */}
       <div
         ref={containerRef}
-        style={{ height: isMobile ? 340 : 480, maxWidth: 600, margin: '0 auto', position: 'relative' }}
+        style={{ height: isMobile ? 340 : 480, maxWidth: 600, margin: '0 auto', position: 'relative', padding: isMobile ? '0 40px' : 0 }}
       >
         <canvas ref={canvasRef} />
 
