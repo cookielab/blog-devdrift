@@ -7,11 +7,14 @@ import {
   LinearScale,
   Filler,
   Tooltip,
+  Legend,
 } from 'chart.js';
 
-Chart.register(LineController, LineElement, PointElement, LinearScale, Filler, Tooltip);
+Chart.register(LineController, LineElement, PointElement, LinearScale, Filler, Tooltip, Legend);
 
 const YEARS = Array.from({ length: 57 }, (_, i) => 1970 + i);
+const SENIOR_YEARS_REQUIRED = 8;
+const ATTRITION_RATE = 0.5;
 
 export default function PopulationChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -23,24 +26,50 @@ export default function PopulationChart() {
         const ctx = canvasRef.current?.getContext('2d');
         if (!ctx) return;
 
+        const totalData = YEARS.map(y => ({ x: y, y: data.values[String(y)] ?? null }));
+        const seniorData = YEARS.map(y => {
+          const pastYear = y - SENIOR_YEARS_REQUIRED;
+          const pastPop = data.values[String(pastYear)];
+          if (pastPop == null) return { x: y, y: 0 };
+          return { x: y, y: +(pastPop * ATTRITION_RATE).toFixed(2) };
+        });
+
         new Chart(ctx, {
           type: 'line',
           data: {
-            datasets: [{
-              label: 'Total developers worldwide (millions)',
-              data: YEARS.map(y => ({ x: y, y: data.values[String(y)] ?? null })),
-              borderColor: 'rgba(255,255,255,0.7)',
-              backgroundColor: 'rgba(255,205,104,0.05)',
-              borderWidth: 3,
-              pointRadius: 0,
-              pointHoverRadius: 8,
-              pointHoverBackgroundColor: '#FFCD68',
-              pointHoverBorderColor: '#1E1E1E',
-              pointHoverBorderWidth: 3,
-              hitRadius: 15,
-              tension: 0.35,
-              fill: true,
-            }],
+            datasets: [
+              {
+                label: 'Total developers worldwide (millions)',
+                data: totalData,
+                borderColor: 'rgba(255,255,255,0.7)',
+                backgroundColor: 'rgba(255,205,104,0.05)',
+                borderWidth: 3,
+                pointRadius: 0,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: '#FFCD68',
+                pointHoverBorderColor: '#1E1E1E',
+                pointHoverBorderWidth: 3,
+                hitRadius: 15,
+                tension: 0.35,
+                fill: '+1',
+              },
+              {
+                label: 'Estimated senior developers (8+ years)',
+                data: seniorData,
+                borderColor: '#FFCD68',
+                borderDash: [6, 4],
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: '#FFCD68',
+                pointHoverBorderColor: '#1E1E1E',
+                pointHoverBorderWidth: 3,
+                hitRadius: 15,
+                tension: 0.35,
+                fill: 'origin',
+                backgroundColor: 'rgba(255,205,104,0.08)',
+              },
+            ],
           },
           options: {
             responsive: true,
@@ -76,7 +105,16 @@ export default function PopulationChart() {
               },
             },
             plugins: {
-              legend: { display: false },
+              legend: {
+                display: true,
+                labels: {
+                  color: '#94a3b8',
+                  font: { size: 12, family: 'Inter' },
+                  usePointStyle: false,
+                  boxWidth: 20,
+                  padding: 16,
+                },
+              },
               tooltip: {
                 backgroundColor: '#252525',
                 borderColor: '#3a3a3a',
@@ -88,7 +126,12 @@ export default function PopulationChart() {
                 padding: 14,
                 callbacks: {
                   title: (items: any[]) => String(Math.round(items[0].parsed.x)),
-                  label: (item: any) => `~${Number(item.parsed.y).toFixed(1)}M developers worldwide`,
+                  label: (item: any) => {
+                    const val = Number(item.parsed.y).toFixed(1);
+                    return item.datasetIndex === 0
+                      ? `~${val}M developers total`
+                      : `~${val}M estimated seniors`;
+                  },
                 },
               },
             },
