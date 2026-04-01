@@ -8,21 +8,12 @@ const { id, title, subtitle } = Astro.props;
 ---
 
 <section id={id} class="chart-section">
-  <div class="chart-header" style="max-width:65ch;margin:0 auto 1.5rem;">
-    <h2
-      style="
-      font-family:'Raleway','Arial Black',sans-serif;
-      font-size:clamp(1.5rem,4vw,2.2rem);
-      font-weight:800;
-      letter-spacing:-0.02em;
-      color:#F2F0E5;
-      margin-bottom:0.35rem;
-    "
-    >
-      {title}
-    </h2>
-    {subtitle && <p style="color:#64748b;max-width:65ch;margin:0 auto;">{subtitle}</p>}
+  <div class="chart-header">
+    <h2>{title}</h2>
+    {subtitle && <p class="chart-subtitle">{subtitle}</p>}
   </div>
+
+  <slot name="extra" />
 
   <div class="chart-card">
     <slot />
@@ -34,6 +25,23 @@ const { id, title, subtitle } = Astro.props;
     padding: 3.5rem 2rem;
     max-width: 1400px;
     margin: 0 auto;
+  }
+  .chart-header {
+    max-width: 65ch;
+    margin: 0 auto 1.5rem;
+  }
+  .chart-header h2 {
+    font-family: 'Raleway', 'Arial Black', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #F2F0E5;
+    margin-bottom: 0.35rem;
+  }
+  .chart-subtitle {
+    color: #94a3b8;
+    line-height: 1.7;
+    font-size: 1rem;
   }
   .chart-card {
     background: #252525;
