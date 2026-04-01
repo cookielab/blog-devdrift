@@ -8,7 +8,7 @@ const { id, title, subtitle } = Astro.props;
 ---
 
 <section id={id} class="chart-section">
-  <div style="max-width:65ch;margin:0 auto 1.5rem;">
+  <div class="chart-header" style="max-width:65ch;margin:0 auto 1.5rem;">
     <h2
       style="
       font-family:'Raleway','Arial Black',sans-serif;
@@ -44,11 +44,16 @@ const { id, title, subtitle } = Astro.props;
   }
   @media (max-width: 768px) {
     .chart-section {
-      padding: 2rem 0.75rem;
+      padding: 2rem 0;
+    }
+    .chart-header {
+      padding: 0 2rem;
     }
     .chart-card {
-      padding: 0.75rem 0.5rem 0.5rem;
-      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
       overflow: hidden;
     }
   }
