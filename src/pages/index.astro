@@ -70,12 +70,11 @@ import ComplexityChart from '../components/ComplexityChart';
     <PopulationChart client:only="react" />
   </ChartSection>
 
-  <ChartSection
-    id="complexity"
-    title="Software Complexity Growth"
-    subtitle="Key complexity indicators · 1970–2026"
-  >
-    <ComplexityChart client:only="react" />
+  <section id="complexity" class="complexity-section">
+    <div class="complexity-header">
+      <h2>Software Complexity Growth</h2>
+      <p class="complexity-subtitle">Key complexity indicators · 1970–2026</p>
+    </div>
 
     <div class="complexity-metrics">
       <div class="complexity-metric">
@@ -131,15 +130,40 @@ import ComplexityChart from '../components/ComplexityChart';
         </p>
       </div>
     </div>
-  </ChartSection>
+
+    <div class="complexity-chart-card">
+      <ComplexityChart client:only="react" />
+    </div>
+  </section>
 
   <style>
+    .complexity-section {
+      padding: 3.5rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .complexity-header {
+      max-width: 65ch;
+      margin: 0 auto 1.5rem;
+    }
+    .complexity-header h2 {
+      font-family: 'Raleway', 'Arial Black', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #F2F0E5;
+      margin-bottom: 0.35rem;
+    }
+    .complexity-subtitle {
+      color: #64748b;
+      max-width: 65ch;
+      margin: 0 auto;
+    }
     .complexity-metrics {
       display: grid;
       gap: 1.5rem;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #3a3a3a;
+      max-width: 65ch;
+      margin: 0 auto 2rem;
     }
     .complexity-metric h3 {
       font-family: 'Raleway', 'Arial Black', sans-serif;
@@ -167,6 +191,31 @@ import ComplexityChart from '../components/ComplexityChart';
       color: #F2F0E5;
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
       font-size: 0.88em;
+    }
+    .complexity-chart-card {
+      background: #252525;
+      border: 1px solid #3a3a3a;
+      border-radius: 1rem;
+      padding: 1.5rem 1.5rem 1rem;
+      position: relative;
+    }
+    @media (max-width: 768px) {
+      .complexity-section {
+        padding: 2rem 0;
+      }
+      .complexity-header {
+        padding: 0 2rem;
+      }
+      .complexity-metrics {
+        padding: 0 2rem;
+      }
+      .complexity-chart-card {
+        padding: 1.5rem;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        overflow: hidden;
+      }
     }
   </style>
 
