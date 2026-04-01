@@ -78,55 +78,54 @@ import ComplexityChart from '../components/ComplexityChart';
 
     <div class="complexity-metrics">
       <div class="complexity-metric">
-        <h3><span class="metric-dot" style="background:#e879f9;"></span>Decision Points incl. Dependencies</h3>
+        <h3><span class="metric-dot" style="background:#60a5fa;"></span>Linux LOC</h3>
         <p>
-          Every <code>if</code>, loop, and pattern-match in your project is a decision point — a place where
-          behavior can diverge and a bug can hide. Modern applications ship with thousands of transitive
-          dependencies, each adding their own branching logic. This metric estimates the total number of
-          decision points across a project and its dependency tree. It's the single best proxy for how
+          Lines of code in the Linux kernel — the most widely deployed software on earth, running
+          phones, servers, cars, and satellites. Its growth is a thermometer for platform complexity:
+          when the kernel doubles, drivers, syscalls, and edge cases double with it, and every layer
+          built on top inherits that weight. From 10K lines in 1991 to over 40 million today.
+        </p>
+      </div>
+
+      <div class="complexity-metric">
+        <h3><span class="metric-dot" style="background:#e879f9;"></span>Branches</h3>
+        <p>
+          Total decision points — every <code>if</code>, loop, and pattern-match — across a project
+          and its entire dependency tree. Modern applications ship with thousands of transitive
+          dependencies, each adding their own branching logic. This is the single best proxy for how
           much behavior a senior developer is implicitly responsible for when they hit "deploy".
         </p>
       </div>
 
       <div class="complexity-metric">
-        <h3><span class="metric-dot" style="background:#60a5fa;"></span>Linux Kernel Lines of Code</h3>
+        <h3><span class="metric-dot" style="background:#4ade80;"></span>npm</h3>
         <p>
-          The Linux kernel is the most widely deployed piece of software on earth — it runs phones,
-          servers, cars, and satellites. Its growth is a reliable thermometer for how complex the
-          underlying platform has become. When the kernel doubles, drivers, syscalls, and edge cases
-          double with it, and every layer built on top inherits that complexity.
+          Total packages in the npm registry — the world's largest and a proxy for ecosystem
+          fragmentation. More packages means more choices for every task, more transitive dependencies
+          to audit, and more surface area for supply-chain attacks. A senior developer in 2010 might
+          have evaluated a handful of libraries; today they inherit hundreds the moment they scaffold
+          a project.
         </p>
       </div>
 
       <div class="complexity-metric">
-        <h3><span class="metric-dot" style="background:#4ade80;"></span>npm Packages</h3>
+        <h3><span class="metric-dot" style="background:#f87171;"></span>CVEs</h3>
         <p>
-          npm is the world's largest package registry and a proxy for ecosystem fragmentation.
-          More packages means more choices for every task, more transitive dependencies to audit, and
-          more surface area for supply-chain attacks. A senior developer in 2010 might have evaluated
-          a handful of libraries; today they inherit hundreds the moment they scaffold a project.
+          Publicly disclosed security vulnerabilities per year. More CVEs means more patches to apply,
+          more dependency upgrades to evaluate, and more time spent on security reviews instead of
+          features. A direct measure of the "maintenance tax" that growing complexity imposes on
+          every team.
         </p>
       </div>
 
       <div class="complexity-metric">
-        <h3><span class="metric-dot" style="background:#f87171;"></span>CVEs per Year</h3>
+        <h3><span class="metric-dot" style="background:#fbbf24;"></span>Stack Size</h3>
         <p>
-          The number of publicly disclosed vulnerabilities each year reflects the security burden on
-          every team. More CVEs means more patches to apply, more dependency upgrades to evaluate,
-          and more time spent on security reviews instead of features. It's a direct measure of the
-          "maintenance tax" that complexity imposes.
-        </p>
-      </div>
-
-      <div class="complexity-metric">
-        <h3><span class="metric-dot" style="background:#fbbf24;"></span>Technologies in a Typical Stack</h3>
-        <p>
-          In 1970, a senior developer needed to know an editor and a language. Today a single
-          full-stack project may touch a framework, a bundler, a type system, a CSS preprocessor,
-          a test runner, a CI pipeline, a container runtime, an orchestrator, a cloud provider, and
-          a dozen SaaS integrations. This metric estimates the number of distinct technologies a
-          senior developer is expected to navigate — and it explains why "just learning the language"
-          stopped being enough decades ago.
+          The number of distinct technologies a senior developer is expected to navigate in a typical
+          project. In 1970 that meant an editor and a language. Today a single full-stack project may
+          touch a framework, a bundler, a type system, a CSS preprocessor, a test runner, a CI
+          pipeline, a container runtime, an orchestrator, a cloud provider, and a dozen SaaS
+          integrations. This is why "just learning the language" stopped being enough decades ago.
         </p>
       </div>
     </div>
