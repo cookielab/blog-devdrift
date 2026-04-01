@@ -34,6 +34,39 @@ interface SkillData {
   values: Record<string, number>;
 }
 
+function makePrimaryDataset(avgs: number[], year: number) {
+  return {
+    label: String(year),
+    data: avgs,
+    borderColor: '#FFCD68',
+    backgroundColor: 'rgba(255,205,104,0.15)',
+    borderWidth: 2.5,
+    pointRadius: 4,
+    pointBackgroundColor: '#FFCD68',
+    pointBorderColor: '#1E1E1E',
+    pointBorderWidth: 2,
+    pointHoverRadius: 7,
+    fill: true,
+  };
+}
+
+function makeCompareDataset(avgs: number[], year: number) {
+  return {
+    label: String(year),
+    data: avgs,
+    borderColor: 'rgba(148,163,184,0.6)',
+    backgroundColor: 'rgba(148,163,184,0.08)',
+    borderWidth: 1.5,
+    borderDash: [4, 4],
+    pointRadius: 3,
+    pointBackgroundColor: 'rgba(148,163,184,0.6)',
+    pointBorderColor: '#1E1E1E',
+    pointBorderWidth: 1.5,
+    pointHoverRadius: 6,
+    fill: true,
+  };
+}
+
 function computeAvgs(skills: SkillData[], year: number): number[] {
   return CAT_KEYS.map(key => {
     const catSkills = skills.filter(s => s.category === key);
@@ -109,36 +142,11 @@ export default function CategoryTrendChart() {
 
     const primaryAvgs = computeAvgs(skills, selectedYear);
 
-    const datasets: any[] = [{
-      label: String(selectedYear),
-      data: primaryAvgs,
-      borderColor: '#FFCD68',
-      backgroundColor: 'rgba(255,205,104,0.15)',
-      borderWidth: 2.5,
-      pointRadius: 4,
-      pointBackgroundColor: '#FFCD68',
-      pointBorderColor: '#1E1E1E',
-      pointBorderWidth: 2,
-      pointHoverRadius: 7,
-      fill: true,
-    }];
+    const datasets: any[] = [makePrimaryDataset(primaryAvgs, selectedYear)];
 
     if (compareYear !== null && compareYear !== selectedYear) {
       const compareAvgs = computeAvgs(skills, compareYear);
-      datasets.push({
-        label: String(compareYear),
-        data: compareAvgs,
-        borderColor: 'rgba(148,163,184,0.6)',
-        backgroundColor: 'rgba(148,163,184,0.08)',
-        borderWidth: 1.5,
-        borderDash: [4, 4],
-        pointRadius: 3,
-        pointBackgroundColor: 'rgba(148,163,184,0.6)',
-        pointBorderColor: '#1E1E1E',
-        pointBorderWidth: 1.5,
-        pointHoverRadius: 6,
-        fill: true,
-      });
+      datasets.push(makeCompareDataset(compareAvgs, compareYear));
     }
 
     const isMobileNow = window.matchMedia('(max-width: 768px)').matches;
@@ -152,7 +160,7 @@ export default function CategoryTrendChart() {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: { duration: 300 },
+        animation: { duration: 400, easing: 'easeOutQuart' },
         scales: {
           r: {
             min: 0,
@@ -209,12 +217,41 @@ export default function CategoryTrendChart() {
 
     // Position HTML labels after chart renders
     requestAnimationFrame(() => updateLabelPositions());
-  }, [skills, selectedYear, compareYear, isMobile, updateLabelPositions]);
+  }, [skills, isMobile]);
 
+  const updateChart = useCallback(() => {
+    const chart = chartRef.current;
+    if (!chart || !skills.length) return;
+
+    const primaryAvgs = computeAvgs(skills, selectedYear);
+    chart.data.datasets[0] = makePrimaryDataset(primaryAvgs, selectedYear) as any;
+
+    if (compareYear !== null && compareYear !== selectedYear) {
+      const compareAvgs = computeAvgs(skills, compareYear);
+      if (chart.data.datasets.length > 1) {
+        chart.data.datasets[1] = makeCompareDataset(compareAvgs, compareYear) as any;
+      } else {
+        chart.data.datasets.push(makeCompareDataset(compareAvgs, compareYear) as any);
+      }
+    } else {
+      chart.data.datasets.splice(1);
+    }
+
+    chart.update();
+    requestAnimationFrame(() => updateLabelPositions());
+  }, [skills, selectedYear, compareYear, updateLabelPositions]);
+
+  // Build chart once when skills load or screen size changes
   useEffect(() => {
     buildChart();
     return () => { chartRef.current?.destroy(); chartRef.current = null; };
-  }, [buildChart]);
+  }, [skills, isMobile]);
+
+  // Update data in-place when year selection changes
+  useEffect(() => {
+    if (!chartRef.current) return;
+    updateChart();
+  }, [selectedYear, compareYear, updateChart]);
 
   // Recalc positions on resize
   useEffect(() => {
