@@ -6,19 +6,22 @@ export interface Props {
 }
 const { id, title, subtitle } = Astro.props;
 ---
+
 <section id={id} class="chart-section">
-  <div style="margin-bottom:1.5rem;">
-    <h2 style="
+  <div style="max-width:65ch;margin:0 auto 1.5rem;">
+    <h2
+      style="
       font-family:'Raleway','Arial Black',sans-serif;
       font-size:clamp(1.5rem,4vw,2.2rem);
       font-weight:800;
       letter-spacing:-0.02em;
       color:#F2F0E5;
       margin-bottom:0.35rem;
-    ">{title}</h2>
-    {subtitle && (
-      <p style="color:#64748b;font-size:0.95rem;">{subtitle}</p>
-    )}
+    "
+    >
+      {title}
+    </h2>
+    {subtitle && <p style="color:#64748b;max-width:65ch;margin:0 auto;">{subtitle}</p>}
   </div>
 
   <div class="chart-card">

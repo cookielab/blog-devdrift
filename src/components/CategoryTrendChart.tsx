@@ -254,7 +254,7 @@ export default function CategoryTrendChart() {
   return (
     <div>
       {/* Intro + scale hint */}
-      <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '0.4rem' }}>
+      <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '0.4rem', maxWidth: '65ch' }}>
         Nine skill areas, mapped for each decade. The bigger the shape, the more the industry demanded. Pick two years to compare.
       </p>
       <p style={{ color: '#64748b', fontSize: '0.78rem', marginBottom: '1rem' }}>
