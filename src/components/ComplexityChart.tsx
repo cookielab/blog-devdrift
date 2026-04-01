@@ -55,7 +55,7 @@ export default function ComplexityChart() {
             data: YEARS.map(y => ({ x: y, y: series.values[String(y)] ?? null })),
             borderColor: series.color,
             backgroundColor: 'transparent',
-            borderWidth: key === 'projectBranches' ? 4 : 3,
+            borderWidth: 3,
             borderDash: series.dash,
             pointRadius: 0,
             pointHoverRadius: 5,
