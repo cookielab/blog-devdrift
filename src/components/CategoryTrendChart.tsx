@@ -128,7 +128,7 @@ export default function CategoryTrendChart() {
     const cy = rScale.yCenter + (rect.top - containerRect.top);
     const radius = rScale.drawingArea;
 
-    const labelOffset = isMobile ? 18 : 24;
+    const labelOffset = isMobile ? 5 : 6;
     setLabelPositions(getLabelPositions(cx, cy, radius, CAT_KEYS.length, labelOffset));
   }, [isMobile]);
 
@@ -205,12 +205,7 @@ export default function CategoryTrendChart() {
                 const idx = items[0]?.dataIndex;
                 return idx !== undefined ? CAT_LABELS[idx] : '';
               },
-              afterTitle: (items: any[]) => {
-                const idx = items[0]?.dataIndex;
-                if (idx === undefined) return '';
-                const key = CAT_KEYS[idx];
-                return CATEGORIES[key]?.desc ?? '';
-              },
+              afterTitle: () => '',
               label: (item: any) => `${item.dataset.label}: ${Number(item.parsed.r).toFixed(1)}`,
             },
           },
@@ -273,83 +268,193 @@ export default function CategoryTrendChart() {
     return () => window.removeEventListener('resize', handler);
   }, [updateLabelPositions]);
 
-  const sliderBtnStyle = (isActive: boolean): React.CSSProperties => ({
-    background: isActive ? '#FFCD6825' : '#2e2e2e',
-    border: `1.5px solid ${isActive ? '#FFCD68' : '#3a3a3a'}`,
-    borderRadius: '999px',
-    color: isActive ? '#FFCD68' : '#94a3b8',
-    cursor: 'pointer',
-    fontSize: isMobile ? '0.8rem' : '0.85rem',
-    fontWeight: isActive ? 700 : 500,
-    padding: isMobile ? '0.4rem 0.7rem' : '0.3rem 0.75rem',
-    minHeight: isMobile ? 36 : 'auto',
-    fontFamily: 'Inter, system-ui, sans-serif',
-    transition: 'all 0.15s',
-  });
+  const compareIndex = compareYear !== null ? PRESET_YEARS.indexOf(compareYear) : 0;
+  const yearIndex = PRESET_YEARS.indexOf(selectedYear);
 
-  const compareBtnStyle = (isActive: boolean): React.CSSProperties => ({
-    background: isActive ? 'rgba(148,163,184,0.12)' : '#2e2e2e',
-    border: `1.5px solid ${isActive ? '#94a3b8' : '#3a3a3a'}`,
-    borderRadius: '999px',
-    color: isActive ? '#94a3b8' : '#64748b',
-    cursor: 'pointer',
-    fontSize: isMobile ? '0.75rem' : '0.8rem',
-    fontWeight: isActive ? 600 : 400,
-    padding: isMobile ? '0.35rem 0.6rem' : '0.25rem 0.65rem',
-    minHeight: isMobile ? 34 : 'auto',
-    fontFamily: 'Inter, system-ui, sans-serif',
-    transition: 'all 0.15s',
-  });
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  // Resolve a clientX position to the nearest PRESET_YEARS index
+  const clientXToIndex = useCallback((clientX: number) => {
+    const track = trackRef.current;
+    if (!track) return 0;
+    const rect = track.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    return Math.round(ratio * (PRESET_YEARS.length - 1));
+  }, []);
+
+  // Drag handler factory — returns onPointerDown for a thumb
+  const makeDrag = useCallback((kind: 'compare' | 'year') => (e: React.PointerEvent) => {
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    const onMove = (ev: PointerEvent) => {
+      const idx = clientXToIndex(ev.clientX);
+      if (kind === 'compare') {
+        if (idx < PRESET_YEARS.indexOf(selectedYearRef.current)) setCompareYear(PRESET_YEARS[idx]);
+      } else {
+        const ci = compareYearRef.current !== null ? PRESET_YEARS.indexOf(compareYearRef.current) : -1;
+        if (idx > ci) setSelectedYear(PRESET_YEARS[idx]);
+      }
+    };
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+  }, [clientXToIndex]);
+
+  // Percentage positions for the filled track
+  const maxIdx = PRESET_YEARS.length - 1;
+  const leftPct = compareYear !== null ? (compareIndex / maxIdx) * 100 : 0;
+  const rightPct = (yearIndex / maxIdx) * 100;
 
   return (
     <div>
-      {/* Year selector */}
-      <div style={{ marginBottom: '0.6rem' }}>
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          gap: isMobile ? '0.35rem' : '0.5rem',
-          marginBottom: '0.5rem',
-        }}>
-          <span style={{ color: '#64748b', fontSize: '0.8rem', fontWeight: 600, marginRight: '0.2rem' }}>Year:</span>
-          {PRESET_YEARS.map(y => (
-            <button key={y} onClick={() => setSelectedYear(y)} style={sliderBtnStyle(y === selectedYear)}>
-              {y}
-            </button>
-          ))}
-        </div>
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          gap: isMobile ? '0.3rem' : '0.4rem',
-        }}>
-          <span style={{ color: '#64748b', fontSize: '0.75rem', marginRight: '0.2rem' }}>Compare:</span>
-          <button
-            onClick={() => setCompareYear(null)}
-            style={compareBtnStyle(compareYear === null)}
-          >None</button>
-          {PRESET_YEARS.filter(y => y !== selectedYear).map(y => (
-            <button key={y} onClick={() => setCompareYear(y)} style={compareBtnStyle(y === compareYear)}>
-              {y}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Legend */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginBottom: '0.75rem', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', color: '#FFCD68' }}>
-          <div style={{ width: 20, height: 3, borderRadius: 2, background: '#FFCD68' }} />
-          {selectedYear}
-        </div>
-        {compareYear !== null && compareYear !== selectedYear && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', color: '#94a3b8' }}>
-            <div style={{ width: 20, height: 2, borderRadius: 2, background: '#94a3b8', opacity: 0.6 }} />
-            {compareYear} (compare)
+      {/* Dual-thumb range slider */}
+      <div style={{ marginBottom: '1.5rem', padding: '0 0.25rem', maxWidth: '65ch', margin: '0 auto 1.5rem' }}>
+        {/* Slider track + thumbs */}
+        <div className="dual-range" style={{ position: 'relative', height: 41 }}>
+          {/* Clickable stop dots with labels above — inset by 9px to match thumb centers */}
+          <div style={{ position: 'absolute', top: 0, left: 9, right: 9, height: 41 }}>
+            {PRESET_YEARS.map((y, i) => {
+              const isSelected = y === selectedYear;
+              const isCompare = y === compareYear;
+              const dotColor = isSelected ? '#FFCD68' : isCompare ? '#94a3b8' : '#64748b';
+              return (
+                <button
+                  key={y}
+                  className="slider-stop"
+                  onClick={() => {
+                    const distToCompare = compareYear !== null ? Math.abs(i - compareIndex) : Infinity;
+                    const distToYear = Math.abs(i - yearIndex);
+                    // Compare (left) has priority on equal distance
+                    if (distToCompare <= distToYear && i < yearIndex) {
+                      setCompareYear(PRESET_YEARS[i]);
+                    } else if (i > compareIndex || compareYear === null) {
+                      setSelectedYear(PRESET_YEARS[i]);
+                    }
+                  }}
+                  style={{
+                    position: 'absolute',
+                    left: `${(i / maxIdx) * 100}%`,
+                    top: 0,
+                    bottom: 0,
+                    transform: 'translateX(-50%)',
+                    zIndex: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    background: 'none',
+                    border: 'none',
+                    padding: '0 4px',
+                    cursor: 'default',
+                  }}
+                  aria-label={`Select ${y}`}
+                >
+                  {/* Label */}
+                  <span className="slider-stop-label" style={{
+                    color: dotColor,
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    fontFamily: 'Inter, system-ui, sans-serif',
+                    lineHeight: 1,
+                    transition: 'color 150ms ease-out, opacity 150ms ease-out',
+                  }}>
+                    {y}
+                  </span>
+                  {/* Dot centered on the track: track center = 36px */}
+                  <div className="slider-stop-dot" style={{
+                    position: 'absolute',
+                    top: 22,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 10,
+                    height: 10,
+                    borderRadius: '50%',
+                    border: `2px solid ${dotColor}`,
+                    background: (isSelected || isCompare) ? 'transparent' : '#1E1E1E',
+                    transition: 'border-color 150ms ease-out, background 150ms ease-out, transform 150ms ease-out',
+                  }} />
+                </button>
+              );
+            })}
           </div>
-        )}
+          {/* Track background — inset by half thumb width (9px) to match input track */}
+          <div style={{
+            position: 'absolute',
+            top: 24,
+            left: 9,
+            right: 9,
+            height: 6,
+            borderRadius: 3,
+            background: '#3a3a3a',
+          }} />
+          {/* Active range fill */}
+          {compareYear !== null && compareYear !== selectedYear && (
+            <div style={{
+              position: 'absolute',
+              top: 24,
+              left: `calc(9px + ${leftPct} * (100% - 18px) / 100)`,
+              width: `calc(${rightPct - leftPct} * (100% - 18px) / 100)`,
+              height: 6,
+              borderRadius: 3,
+              background: 'linear-gradient(90deg, rgba(148,163,184,0.3), rgba(255,205,104,0.3))',
+              transition: 'left 150ms ease-out, width 150ms ease-out',
+            }} />
+          )}
+          {/* Custom draggable thumbs — positioned within the 9px-inset track area */}
+          <div ref={trackRef} style={{ position: 'absolute', top: 0, left: 9, right: 9, height: 41 }}>
+            {/* Compare (left) thumb */}
+            <div
+              className="slider-thumb"
+              onPointerDown={makeDrag('compare')}
+              style={{
+                position: 'absolute',
+                left: `${leftPct}%`,
+                top: 18,
+                width: 18,
+                height: 18,
+                borderRadius: '50%',
+                background: '#94a3b8',
+                border: '2px solid #1E1E1E',
+                transform: 'translateX(-50%)',
+                cursor: 'grab',
+                zIndex: 5,
+                transition: 'left 150ms ease-out',
+                touchAction: 'none',
+              }}
+              aria-label="Compare year"
+            />
+            {/* Year (right) thumb */}
+            <div
+              className="slider-thumb"
+              onPointerDown={makeDrag('year')}
+              style={{
+                position: 'absolute',
+                left: `${rightPct}%`,
+                top: 18,
+                width: 18,
+                height: 18,
+                borderRadius: '50%',
+                background: '#FFCD68',
+                border: '2px solid #1E1E1E',
+                transform: 'translateX(-50%)',
+                cursor: 'grab',
+                zIndex: 6,
+                transition: 'left 150ms ease-out',
+                touchAction: 'none',
+              }}
+              aria-label="Selected year"
+            />
+          </div>
+        </div>
+
+        {/* Slider hover CSS */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          .slider-thumb:hover { transform: translateX(-50%) scale(1.2); }
+          .slider-stop:hover .slider-stop-label { color: #F2F0E5 !important; }
+          .slider-stop:hover .slider-stop-dot { transform: translateX(-50%) scale(1.3); }
+        `}} />
       </div>
 
       {/* Chart with HTML label overlays */}
@@ -426,14 +531,26 @@ export default function CategoryTrendChart() {
 
         {/* CSS for hover — inline styles can't do :hover, so use a style tag */}
         <style dangerouslySetInnerHTML={{ __html: `
-          .radar-label:hover .radar-label-tooltip { display: block !important; }
-          .radar-label:hover > span { text-decoration: underline; text-underline-offset: 3px; }
+          @media (min-width: 769px) {
+            .radar-label:hover .radar-label-tooltip { display: block !important; }
+            .radar-label:hover > span { text-decoration: underline; text-underline-offset: 3px; }
+          }
         `}} />
       </div>
 
-      <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginTop: '1.5rem' }}>
-        Scale: 0 = Not on the radar · 5 = Useful, not required · 8 = Required · 10 = Expectation baseline
-      </p>
+      {/* Legend */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '1rem', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', color: '#FFCD68' }}>
+          <div style={{ width: 20, height: 3, borderRadius: 2, background: '#FFCD68' }} />
+          {selectedYear}
+        </div>
+        {compareYear !== null && compareYear !== selectedYear && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', color: '#94a3b8' }}>
+            <div style={{ width: 20, height: 2, borderRadius: 2, background: '#94a3b8', opacity: 0.6 }} />
+            {compareYear} (compare)
+          </div>
+        )}
+      </div>
     </div>
   );
 }
