@@ -218,8 +218,13 @@ export default function SkillFilters() {
     <div style={{ overflow: 'hidden', maxWidth: '100%' }}>
       <style dangerouslySetInnerHTML={{ __html: `
         .sf-btn:hover { background: rgba(255,255,255,0.06) !important; }
+        .sf-layout { display: flex; gap: 1rem; }
+        @media (max-width: 768px) {
+          .sf-layout { flex-direction: column; }
+          .sf-layout > div:last-child { width: 100% !important; min-width: 0 !important; }
+        }
       `}} />
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      <div className="sf-layout">
         <div style={{ flex: 1, minWidth: 0 }}>
           <SkillsChart
             activeCategories={activeCategories}
