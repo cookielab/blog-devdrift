@@ -9,10 +9,11 @@ import {
   Tooltip,
 } from 'chart.js';
 import { useMediaQuery } from './useMediaQuery';
+import { YEARS } from '../constants/chart';
+import { useFetchJson } from '../hooks/useFetchJson';
+import { tooltipStyle, timeXScale, baseYScale } from '../utils/chartDefaults';
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, LogarithmicScale, Tooltip);
-
-const YEARS = Array.from({ length: 57 }, (_, i) => 1970 + i);
 
 function fmtCount(v: number): string {
   if (v >= 1e9) return `${(v / 1e9).toFixed(1)}B`;
@@ -32,28 +33,17 @@ interface SeriesMeta {
 export default function ComplexityChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart | null>(null);
-  const [seriesMeta, setSeriesMeta] = useState<SeriesMeta[]>([]);
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [logScale, setLogScale] = useState(true);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const dataRef = useRef<any>(null);
+  const complexityData = useFetchJson<Record<string, any>>('data/complexity-data.json');
+  const seriesMeta: SeriesMeta[] = complexityData
+    ? SERIES_KEYS.map(key => ({ key, label: complexityData[key].label, color: complexityData[key].color }))
+    : [];
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/complexity-data.json`)
-      .then(r => r.json())
-      .then(data => {
-        dataRef.current = data;
-        setSeriesMeta(SERIES_KEYS.map(key => ({
-          key,
-          label: data[key].label,
-          color: data[key].color,
-        })));
-      });
-  }, []);
-
-  useEffect(() => {
-    const data = dataRef.current;
+    const data = complexityData;
     if (!data || !canvasRef.current) return;
 
     const ctx = canvasRef.current.getContext('2d');
@@ -76,7 +66,7 @@ export default function ComplexityChart() {
       } as any;
     });
 
-    const isMobileNow = window.matchMedia('(max-width: 768px)').matches;
+    const isMobileNow = isMobile;
 
     chartRef.current = new Chart(ctx, {
       type: 'line',
@@ -87,46 +77,21 @@ export default function ComplexityChart() {
         interaction: { mode: 'nearest', intersect: false },
         animation: { duration: 400, easing: 'easeOutQuart' },
         scales: {
-          x: {
-            type: 'linear',
-            min: 1970,
-            max: 2026,
-            ticks: {
-              color: '#64748b',
-              font: { size: isMobileNow ? 11 : 13 },
-              stepSize: isMobileNow ? 10 : 5,
-              maxRotation: 0,
-              callback: (v: any) => {
-                const step = isMobileNow ? 10 : 5;
-                return (Number.isInteger(v) && v % step === 0) ? String(v) : '';
-              },
-            },
-            grid: { color: 'rgba(58,58,58,0.8)' },
-            border: { color: '#3a3a3a' },
-          },
+          x: timeXScale(isMobileNow),
           y: {
+            ...baseYScale(isMobileNow),
             type: logScale ? 'logarithmic' : 'linear',
             min: logScale ? 1 : 0,
             ticks: {
-              color: '#64748b',
-              font: { size: isMobileNow ? 11 : 13 },
-              callback: (v: any) => fmtCount(v),
+              ...baseYScale(isMobileNow).ticks,
+              callback: (v: number | string) => fmtCount(Number(v)),
             },
-            grid: { color: 'rgba(58,58,58,0.5)' },
-            border: { color: '#3a3a3a' },
           },
         },
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: '#252525',
-            borderColor: '#3a3a3a',
-            borderWidth: 1,
-            titleColor: '#F2F0E5',
-            titleFont: { size: 14 },
-            bodyColor: '#94a3b8',
-            bodyFont: { size: 13 },
-            padding: 14,
+            ...tooltipStyle(),
             callbacks: {
               title: (items: any[]) => `${items[0].dataset.label}  ·  ${String(Math.round(items[0].parsed.x))}`,
               label: (item: any) => `${fmtCount(item.parsed.y)} ${(item.dataset as any)._unit}`,
@@ -137,7 +102,7 @@ export default function ComplexityChart() {
     });
 
     return () => { chartRef.current?.destroy(); chartRef.current = null; };
-  }, [seriesMeta, logScale]);
+  }, [complexityData, logScale, isMobile]);
 
   // Sync hidden state to chart
   useEffect(() => {
