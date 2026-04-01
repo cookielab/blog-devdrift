@@ -98,6 +98,8 @@ export default function CategoryTrendChart() {
   const [skills, setSkills] = useState<SkillData[]>([]);
   const [selectedYear, setSelectedYear] = useState(2026);
   const [compareYear, setCompareYear] = useState<number | null>(2000);
+  const selectedYearRef = useRef(selectedYear);
+  const compareYearRef = useRef(compareYear);
   const [labelPositions, setLabelPositions] = useState<{ x: number; y: number; anchor: string }[]>([]);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -140,13 +142,13 @@ export default function CategoryTrendChart() {
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
 
-    const primaryAvgs = computeAvgs(skills, selectedYear);
+    const primaryAvgs = computeAvgs(skills, selectedYearRef.current);
 
-    const datasets: any[] = [makePrimaryDataset(primaryAvgs, selectedYear)];
+    const datasets: any[] = [makePrimaryDataset(primaryAvgs, selectedYearRef.current)];
 
-    if (compareYear !== null && compareYear !== selectedYear) {
-      const compareAvgs = computeAvgs(skills, compareYear);
-      datasets.push(makeCompareDataset(compareAvgs, compareYear));
+    if (compareYearRef.current !== null && compareYearRef.current !== selectedYearRef.current) {
+      const compareAvgs = computeAvgs(skills, compareYearRef.current);
+      datasets.push(makeCompareDataset(compareAvgs, compareYearRef.current));
     }
 
     const isMobileNow = window.matchMedia('(max-width: 768px)').matches;
@@ -241,11 +243,14 @@ export default function CategoryTrendChart() {
     requestAnimationFrame(() => updateLabelPositions());
   }, [skills, selectedYear, compareYear, updateLabelPositions]);
 
+  useEffect(() => { selectedYearRef.current = selectedYear; }, [selectedYear]);
+  useEffect(() => { compareYearRef.current = compareYear; }, [compareYear]);
+
   // Build chart once when skills load or screen size changes
   useEffect(() => {
     buildChart();
     return () => { chartRef.current?.destroy(); chartRef.current = null; };
-  }, [skills, isMobile]);
+  }, [buildChart]);
 
   // Update data in-place when year selection changes
   useEffect(() => {
