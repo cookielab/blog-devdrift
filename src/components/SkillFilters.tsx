@@ -24,8 +24,8 @@ export default function SkillFilters() {
   const [activeCategories, setActiveCategories] = useState<Set<string>>(new Set(ALL_KEYS));
   const [hiddenSkills, setHiddenSkills] = useState<Set<string>>(new Set());
   const [skillsList, setSkillsList] = useState<SkillMeta[]>([]);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
-
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [breakdown, setBreakdown] = useState(false);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}data/skills-timeline.json`)
@@ -40,15 +40,9 @@ export default function SkillFilters() {
       const next = new Set(prev);
       if (next.has(key)) {
         next.delete(key);
-        // Collapse when disabling
-        setExpandedCategories(prev2 => {
-          const n = new Set(prev2);
-          n.delete(key);
-          return n;
-        });
+        if (expandedCategory === key) setExpandedCategory(null);
       } else {
         next.add(key);
-        // Re-show all skills in this category
         setHiddenSkills(prev2 => {
           const n = new Set(prev2);
           skillsList.filter(s => s.category === key).forEach(s => n.delete(s.name));
@@ -60,20 +54,7 @@ export default function SkillFilters() {
   }
 
   function toggleExpand(key: string) {
-    setExpandedCategories(prev => {
-      const next = new Set(prev);
-      next.has(key) ? next.delete(key) : next.add(key);
-      return next;
-    });
-    // Also enable the category if it was off
-    if (!activeCategories.has(key)) {
-      setActiveCategories(prev => new Set(prev).add(key));
-      setHiddenSkills(prev => {
-        const n = new Set(prev);
-        skillsList.filter(s => s.category === key).forEach(s => n.delete(s.name));
-        return n;
-      });
-    }
+    setExpandedCategory(prev => prev === key ? null : key);
   }
 
   function toggleSkill(skillName: string) {
@@ -84,8 +65,7 @@ export default function SkillFilters() {
     });
   }
 
-  // Determine viewMode for SkillsChart: if any category is expanded, use 'skills'
-  const viewMode = expandedCategories.size > 0 ? 'skills' as const : 'categories' as const;
+  const viewMode = breakdown ? 'skills' as const : 'categories' as const;
 
   const catLabelStyle = (isActive: boolean, color: string): React.CSSProperties => ({
     flex: 1,
@@ -138,7 +118,14 @@ export default function SkillFilters() {
 
   function selectNone() {
     setActiveCategories(new Set());
-    setExpandedCategories(new Set());
+    setExpandedCategory(null);
+  }
+
+  function toggleBreakdown() {
+    setBreakdown(prev => {
+      if (prev) setExpandedCategory(null);
+      return !prev;
+    });
   }
 
   const allActive = activeCategories.size === ALL_KEYS.length;
@@ -165,13 +152,14 @@ export default function SkillFilters() {
       minWidth: 210,
       width: 210,
     }}>
-      <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.35rem' }}>
+      <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
         <button onClick={selectAll} className="sf-btn" style={utilBtnStyle(allActive)}>All</button>
         <button onClick={selectNone} className="sf-btn" style={utilBtnStyle(noneActive)}>None</button>
+        <button onClick={toggleBreakdown} className="sf-btn" style={utilBtnStyle(breakdown)}>Breakdown</button>
       </div>
       {Object.entries(CATEGORIES).map(([key, cat]) => {
         const isActive = activeCategories.has(key);
-        const isExpanded = expandedCategories.has(key);
+        const isExpanded = expandedCategory === key;
         const catSkills = skillsList.filter(s => s.category === key);
         const hasMultipleSkills = catSkills.length > 1;
         return (
@@ -190,7 +178,7 @@ export default function SkillFilters() {
               >
                 {cat.label}
               </button>
-              {hasMultipleSkills && (
+              {breakdown && hasMultipleSkills && (
                 <button
                   className="sf-btn"
                   onClick={() => toggleExpand(key)}
@@ -201,7 +189,7 @@ export default function SkillFilters() {
                 </button>
               )}
             </div>
-            {isExpanded && isActive && (
+            {breakdown && isExpanded && isActive && (
               <div style={{
                 display: 'flex',
                 flexWrap: 'wrap',
