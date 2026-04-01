@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Chart,
+  Filler,
   LineController,
   LineElement,
   PointElement,
@@ -13,7 +14,7 @@ import { YEARS } from '../constants/chart';
 import { useFetchJson } from '../hooks/useFetchJson';
 import { tooltipStyle, timeXScale, baseYScale } from '../utils/chartDefaults';
 
-Chart.register(LineController, LineElement, PointElement, LinearScale, LogarithmicScale, Tooltip);
+Chart.register(Filler, LineController, LineElement, PointElement, LinearScale, LogarithmicScale, Tooltip);
 
 function fmtCount(v: number): string {
   if (v >= 1e9) return `${(v / 1e9).toFixed(1)}B`;
@@ -66,6 +67,52 @@ export default function ComplexityChart() {
       } as any;
     });
 
+    // Envelope: min/max across all series per year
+    const upperData: { x: number; y: number }[] = [];
+    const lowerData: { x: number; y: number }[] = [];
+    YEARS.forEach(y => {
+      const yearStr = String(y);
+      const vals: number[] = [];
+      SERIES_KEYS.forEach(key => {
+        const val = data[key].values[yearStr];
+        if (val != null && val > 0) vals.push(val);
+      });
+      if (vals.length > 0) {
+        upperData.push({ x: y, y: Math.max(...vals) });
+        lowerData.push({ x: y, y: Math.min(...vals) });
+      }
+    });
+
+    // Insert envelope datasets at the beginning so they render behind the lines
+    datasets.unshift(
+      {
+        label: '_upper',
+        data: upperData,
+        borderColor: 'transparent',
+        backgroundColor: 'transparent',
+        borderWidth: 0,
+        pointRadius: 0,
+        pointHoverRadius: 0,
+        tension: 0.3,
+        fill: false,
+        _key: '_upper',
+        _envelope: true,
+      } as any,
+      {
+        label: '_lower',
+        data: lowerData,
+        borderColor: 'transparent',
+        backgroundColor: 'rgba(255, 205, 104, 0.06)',
+        borderWidth: 0,
+        pointRadius: 0,
+        pointHoverRadius: 0,
+        tension: 0.3,
+        fill: { target: '-1', above: 'rgba(255, 205, 104, 0.06)', below: 'rgba(255, 205, 104, 0.06)' },
+        _key: '_lower',
+        _envelope: true,
+      } as any,
+    );
+
     const isMobileNow = isMobile;
 
     chartRef.current = new Chart(ctx, {
@@ -92,6 +139,7 @@ export default function ComplexityChart() {
           legend: { display: false },
           tooltip: {
             ...tooltipStyle(),
+            filter: (item: any) => !(item.dataset as any)._envelope,
             callbacks: {
               title: (items: any[]) => `${items[0].dataset.label}  ·  ${String(Math.round(items[0].parsed.x))}`,
               label: (item: any) => `${fmtCount(item.parsed.y)} ${(item.dataset as any)._unit}`,
@@ -104,15 +152,42 @@ export default function ComplexityChart() {
     return () => { chartRef.current?.destroy(); chartRef.current = null; };
   }, [complexityData, logScale, isMobile]);
 
-  // Sync hidden state to chart
+  // Sync hidden state + recompute envelope from visible series
   useEffect(() => {
     const chart = chartRef.current;
-    if (!chart) return;
+    const data = complexityData;
+    if (!chart || !data) return;
+
+    const visibleKeys = SERIES_KEYS.filter(k => !hidden.has(k));
+
     chart.data.datasets.forEach((ds: any) => {
+      if (ds._envelope) return;
       ds.hidden = hidden.has(ds._key);
     });
+
+    const upperDs = chart.data.datasets.find((ds: any) => ds._key === '_upper');
+    const lowerDs = chart.data.datasets.find((ds: any) => ds._key === '_lower');
+    if (upperDs && lowerDs) {
+      const upper: { x: number; y: number }[] = [];
+      const lower: { x: number; y: number }[] = [];
+      YEARS.forEach(y => {
+        const yearStr = String(y);
+        const vals: number[] = [];
+        visibleKeys.forEach(key => {
+          const val = data[key].values[yearStr];
+          if (val != null && val > 0) vals.push(val);
+        });
+        if (vals.length > 0) {
+          upper.push({ x: y, y: Math.max(...vals) });
+          lower.push({ x: y, y: Math.min(...vals) });
+        }
+      });
+      upperDs.data = upper;
+      lowerDs.data = lower;
+    }
+
     chart.update();
-  }, [hidden]);
+  }, [hidden, complexityData]);
 
   function toggle(key: string) {
     setHidden(prev => {
