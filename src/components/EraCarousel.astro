@@ -1,0 +1,158 @@
+---
+const eras = [
+  {
+    year: '1970s',
+    text: 'Programming meant knowing your <strong>hardware</strong> — memory addresses, register layouts, instruction sets. A "developer" was usually a mathematician or electrical engineer working on a mainframe in a university lab or a defense contractor\'s basement. Teams were tiny, projects took years, and shipping meant handing over a physical tape. The tools were a line editor, a compiler, and if you were lucky, a debugger. There was no internet, no package manager, no Stack Overflow. You learned from printed manuals, colleagues, and trial and error — mostly error.',
+  },
+  {
+    year: '1980s',
+    text: 'The <strong>personal computer</strong> changed who could write software. BASIC, Pascal, and C gave anyone with a desk the power to build something. The first IDEs appeared. Software became a product you could buy in a shrink-wrapped box at a store. But the ecosystem was still small — you picked one language, one platform, one compiler. You learned from thick reference books and local user groups. The entire industry still fit inside a few thousand companies, and most programmers never collaborated with someone they hadn\'t met in person.',
+  },
+  {
+    year: '1990s',
+    text: 'The <strong>web</strong> broke the walls down. Object-oriented programming went mainstream with C++ and Java. Design patterns, refactoring, and the first whispers of agile appeared. Linux proved that strangers on the internet could build an operating system together. A developer now had to think about GUIs, networks, and users who weren\'t engineers. The job stopped being "write correct code" and started being "build something people can use." The skill ceiling quietly doubled, but nobody updated the job description.',
+  },
+  {
+    year: '2000s',
+    text: 'The <strong>dot-com boom</strong> pulled millions into the field, and the bust that followed couldn\'t push them back out. Web development exploded — HTML, CSS, JavaScript, PHP, and MySQL became the new bread and butter. Agile went from manifesto to methodology. Version control moved from CVS to SVN to the early days of Git. The stack started fragmenting: frontend, backend, database, and deployment became separate specializations. Google showed that scale was a problem worth solving, and suddenly every startup wanted to solve it too.',
+  },
+  {
+    year: '2010s',
+    text: 'The <strong>cloud</strong> ate the server room. AWS, Docker, Kubernetes — infrastructure became code. Mobile-first design rewired how developers thought about interfaces. Git and GitHub transformed collaboration from emailing patches to pull requests. The stack exploded: React, Angular, Node, microservices, CI/CD pipelines, monitoring, observability. A senior developer was now expected to be part architect, part operations engineer, part security consultant. The number of things you needed to know to be considered senior roughly doubled — again.',
+  },
+  {
+    year: '2020s',
+    text: '<strong>AI</strong> appeared out of nowhere and rewrote the rules overnight. Remote work became the default. Security and supply-chain attacks moved from edge cases to daily concerns. The stack kept growing — but now AI tools started writing code alongside you, reviewing your pull requests, and generating tests. Being a senior developer in 2026 means navigating more complexity than any single person was ever expected to handle, while deciding which parts of your job to delegate to a machine that learns faster than you do.',
+  },
+];
+---
+
+<section class="era-section">
+  <div class="era-header">
+    <h2>Then vs Now</h2>
+  </div>
+
+  <div class="era-tabs" role="tablist" aria-label="Decades">
+    {eras.map((era, i) => (
+      <button
+        role="tab"
+        class:list={['era-tab', { active: i === eras.length - 1 }]}
+        aria-selected={i === eras.length - 1 ? 'true' : 'false'}
+        aria-controls={`era-panel-${i}`}
+        data-index={i}
+      >
+        {era.year}
+      </button>
+    ))}
+  </div>
+
+  <div class="era-panels">
+    {eras.map((era, i) => (
+      <div
+        id={`era-panel-${i}`}
+        role="tabpanel"
+        class:list={['era-panel', { active: i === eras.length - 1 }]}
+        data-index={i}
+      >
+        <p set:html={era.text} />
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .era-section {
+    padding: 3.5rem 2rem 0;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .era-header {
+    max-width: 65ch;
+    margin: 0 auto 1rem;
+  }
+  .era-header h2 {
+    font-family: 'Raleway', 'Arial Black', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #F2F0E5;
+  }
+  .era-tabs {
+    max-width: 65ch;
+    margin: 0 auto;
+    display: flex;
+    gap: 0.25rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .era-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .era-tab {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #3a3a3a;
+    color: #64748b;
+    font-family: 'Raleway', 'Arial Black', sans-serif;
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
+    font-weight: 700;
+    padding: 0.6rem 0.4rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+  .era-tab:hover {
+    color: #94a3b8;
+  }
+  .era-tab.active {
+    color: #FFCD68;
+    border-bottom-color: #FFCD68;
+  }
+  .era-panels {
+    max-width: 65ch;
+    margin: 0 auto;
+  }
+  .era-panel {
+    display: none;
+    padding: 1.25rem 0 0;
+  }
+  .era-panel.active {
+    display: block;
+  }
+  .era-panel p {
+    color: #94a3b8;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+  .era-panel :global(strong) {
+    color: #F2F0E5;
+    font-weight: 600;
+  }
+  @media (max-width: 768px) {
+    .era-section {
+      padding: 2rem 2rem 0;
+    }
+  }
+</style>
+
+<script>
+  const tabs = document.querySelectorAll('.era-tab');
+  const panels = document.querySelectorAll('.era-panel');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const index = (tab as HTMLElement).dataset.index;
+      tabs.forEach((t) => {
+        const isActive = (t as HTMLElement).dataset.index === index;
+        t.classList.toggle('active', isActive);
+        t.setAttribute('aria-selected', String(isActive));
+      });
+      panels.forEach((p) => {
+        p.classList.toggle('active', (p as HTMLElement).dataset.index === index);
+      });
+    });
+  });
+</script>

@@ -7,6 +7,7 @@ import SkillFilters from '../components/SkillFilters';
 import PopulationChart from '../components/PopulationChart';
 import CategoryTrendChart from '../components/CategoryTrendChart';
 import ComplexityChart from '../components/ComplexityChart';
+import EraCarousel from '../components/EraCarousel.astro';
 ---
 <BaseLayout>
   <HeroSection />
@@ -25,7 +26,7 @@ import ComplexityChart from '../components/ComplexityChart';
       <p style="color:#64748b;margin-bottom:1.25rem;">
         All charts use a 0–10 scale calibrated to average expectations for a <strong style="color:#F2F0E5;">senior developer</strong> role.
       </p>
-      <dl style="display:grid;gap:0.25rem;color:#94a3b8;font-size:1rem;line-height:1.25;">
+      <dl style="display:grid;gap:0.5rem;color:#94a3b8;font-size:1rem;line-height:1.25;">
         <div style="display:flex;gap:0.5rem;">
           <dt style="color:#FFCD68;font-weight:700;font-size:1rem;min-width:1.5rem;text-align:right;">0</dt>
           <dd><strong style="color:#F2F0E5;">Not on the radar.</strong> The skill didn't exist yet or nobody considered it relevant.</dd>
@@ -46,9 +47,12 @@ import ComplexityChart from '../components/ComplexityChart';
     </div>
   </section>
 
+  <EraCarousel />
+
   <ChartSection
     id="category-trends"
-    title="Skill Radar — Then vs Now"
+    title="Skill Radar"
+    headingLevel={3}
     subtitle="What skills did the industry expect from senior developers — and how did that change over time? It used to be simple: know your hardware and write good code. Over the decades the shape pulled outward as architecture, product sense, teamwork, and UX became just as important. Hardware and raw coding shrank while AI appeared out of nowhere. The tight sliver became a full polygon — today, being senior means being good at almost everything."
   >
     <CategoryTrendChart client:only="react" />
@@ -57,6 +61,7 @@ import ComplexityChart from '../components/ComplexityChart';
   <ChartSection
     id="skills-timeline"
     title="Skill Expectations Timeline"
+    headingLevel={3}
     subtitle="The skills that defined a programmer — language mastery, algorithms, data structures — quietly lost ground to everything that surrounds programming: cloud, security, observability, CI/CD. SQL and design patterns peaked and declined. Soft skills went from footnote to non-negotiable. Then AI compressed an entire skill category from zero to must-have in five years. The job title stayed the same; the job description was rewritten from scratch — twice."
   >
     <SkillFilters client:only="react" />
@@ -149,7 +154,7 @@ import ComplexityChart from '../components/ComplexityChart';
       gap: 0.5rem;
       list-style: none;
       cursor: default;
-      padding: 0.35rem 0;
+      padding: 0.35rem 0.5rem;
       border-radius: 0.4rem;
       transition: background 0.15s ease-out;
     }
