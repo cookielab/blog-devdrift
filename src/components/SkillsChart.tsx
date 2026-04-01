@@ -348,7 +348,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
           x: {
             type: 'linear',
             min: 1970,
-            max: 2031,
+            max: 2027,
             ticks: {
               color: '#64748b',
               font: { size: isMobileNow ? 11 : 13 },
@@ -359,7 +359,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
               },
               maxRotation: 0,
             },
-            afterFit(scale: any) { scale.paddingRight = isMobileNow ? 20 : 40; },
+            afterFit(scale: any) { scale.paddingRight = isMobileNow ? 8 : 12; },
             grid: { color: 'rgba(58,58,58,0.8)' },
             border: { color: '#3a3a3a' },
           },
@@ -372,9 +372,9 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
               stepSize: isMobileNow ? 2 : 1,
               callback: (v: any) => {
                 if (isMobileNow) return String(v);
-                if (v === 5) return '5 – useful, not required';
+                if (v === 5) return '5 – useful';
                 if (v === 8) return '8 – required';
-                if (v === 10) return '10 – expectation baseline';
+                if (v === 10) return '10 – assumed';
                 return String(v);
               },
             },
@@ -454,23 +454,6 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
 
   return (
     <div>
-      {/* Scale legend */}
-      {!isMobile && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.2rem', marginBottom: '1rem' }}>
-          {[
-            { bg: '#475569', label: '0 – not on the radar' },
-            { bg: '#64748b', label: '5 – useful, not required' },
-            { bg: '#94a3b8', label: '8 – required' },
-            { bg: '#F2F0E5', label: '10 – expectation baseline' },
-          ].map(item => (
-            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.85rem', color: '#64748b' }}>
-              <span style={{ display: 'inline-block', width: 28, height: 5, borderRadius: 3, background: item.bg, flexShrink: 0, lineHeight: 0, verticalAlign: 'middle' }} />
-              {item.label}
-            </div>
-          ))}
-        </div>
-      )}
-
       <div
         style={{ position: 'relative', height: isMobile ? 320 : 560 }}
         onClick={(e) => { if (e.target === e.currentTarget) setSelectedSkill(null); }}
@@ -559,32 +542,6 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
         </div>
       )}
 
-      {/* Detail panel below chart — desktop only */}
-      {!isMobile && (
-        <div style={{
-          marginTop: '0.75rem',
-          minHeight: '4.5rem',
-          background: displayedSkill ? '#252525' : 'transparent',
-          border: displayedSkill ? '1px solid #3a3a3a' : '1px solid transparent',
-          borderRadius: '0.75rem',
-          padding: displayedSkill ? '0.85rem 1.2rem' : '0',
-          transition: 'all 0.15s',
-        }}>
-          {displayedSkill && (
-            <>
-              <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '0.3rem', fontFamily: 'Raleway, Arial Black, sans-serif', color: '#F2F0E5' }}>
-                {displayedSkill.name}
-                <span style={{ marginLeft: '0.6rem', fontSize: '0.85rem', fontWeight: 400, color: displayedSkill.catColor, fontFamily: 'Inter, system-ui, sans-serif' }}>
-                  {displayedSkill.catLabel}
-                </span>
-              </div>
-              <div style={{ color: '#94a3b8', lineHeight: 1.65, fontSize: '0.9rem' }}>
-                {displayedSkill.desc}
-              </div>
-            </>
-          )}
-        </div>
-      )}
     </div>
   );
 }
