@@ -295,7 +295,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
           ds.borderWidth = ds._origWidth;
         });
         setHoveredSkill(null);
-        chart.update('none');
+        chart.update();
         drawOverlay(chart, null);
       } else if (hoveredIdx !== -1) {
         if (datasetChanged) {
@@ -309,7 +309,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
               ds.borderWidth = ds._origWidth;
             }
           });
-          chart.update('none');
+          chart.update();
         }
         drawOverlay(chart, activeElementRef);
         const hoveredDs = chart.data.datasets[hoveredIdx] as any;
@@ -337,7 +337,10 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
         maintainAspectRatio: false,
         clip: false,
         interaction: { mode: 'nearest', intersect: false },
-        animation: { duration: 200 },
+        animation: { duration: 400, easing: 'easeOutQuart' },
+        animations: {
+          borderWidth: { duration: 200, easing: 'easeOutQuart' },
+        },
         layout: {
           padding: { right: 8, left: 4, top: isMobileNow ? 8 : 52, bottom: 4 },
         },
