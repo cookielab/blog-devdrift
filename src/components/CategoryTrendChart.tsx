@@ -382,7 +382,7 @@ export default function CategoryTrendChart() {
       </div>
 
       <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginTop: '1.5rem' }}>
-        Scale: 0 = not on the radar · 5 = nice to have · 8 = must-have for seniors · 10 = everyone needs it
+        Scale: 0 = Not on the radar · 5 = Useful, not required · 8 = Required · 10 = Expectation baseline
       </p>
     </div>
   );

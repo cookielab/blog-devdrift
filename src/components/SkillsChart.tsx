@@ -372,9 +372,9 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
               stepSize: isMobileNow ? 2 : 1,
               callback: (v: any) => {
                 if (isMobileNow) return String(v);
-                if (v === 5) return '5 – useful';
+                if (v === 5) return '5 – useful, not required';
                 if (v === 8) return '8 – required';
-                if (v === 10) return '10 – baseline';
+                if (v === 10) return '10 – expectation baseline';
                 return String(v);
               },
             },
@@ -458,9 +458,9 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
       {!isMobile && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.2rem', marginBottom: '1rem' }}>
           {[
-            { bg: '#475569', label: '0 – non-existent' },
+            { bg: '#475569', label: '0 – not on the radar' },
             { bg: '#64748b', label: '5 – useful, not required' },
-            { bg: '#94a3b8', label: '8 – required from a senior' },
+            { bg: '#94a3b8', label: '8 – required' },
             { bg: '#F2F0E5', label: '10 – expectation baseline' },
           ].map(item => (
             <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.85rem', color: '#64748b' }}>
