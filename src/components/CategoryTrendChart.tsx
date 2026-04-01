@@ -194,7 +194,7 @@ export default function CategoryTrendChart() {
             borderColor: '#3a3a3a',
             borderWidth: 1,
             titleColor: '#F2F0E5',
-            titleFont: { size: 14, weight: '700' },
+            titleFont: { size: 14, weight: 700 },
             bodyColor: '#94a3b8',
             bodyFont: { size: 13 },
             padding: 14,
