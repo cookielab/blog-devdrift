@@ -56,7 +56,7 @@ import ComplexityChart from '../components/ComplexityChart';
 
   <ChartSection
     id="skills-timeline"
-    title="Senior Developer Skills Timeline"
+    title="Skill Expectations Timeline"
     subtitle="Skill expectations · 1970–2026 · Mainstream software development"
   >
     <SkillFilters client:only="react" />
@@ -74,24 +74,17 @@ import ComplexityChart from '../components/ComplexityChart';
     <div class="complexity-header">
       <h2>Software Complexity Growth</h2>
       <p class="complexity-story">
-        In the early 1970s a senior developer wrote assembly or FORTRAN for a single mainframe, the
-        whole program fit on a stack of punch cards, and "the platform" was whatever IBM shipped. C
-        and Unix changed that — suddenly code was portable, and one program could grow across machines.
-        When PCs arrived in the 1980s, the audience exploded but the tools stayed simple: one compiler,
-        one editor, maybe a Makefile. The real break came with the web. After 1995, software had to run
-        on unknown browsers, talk to remote servers, and handle users who could show up by the million.
-        Linux — 10,000 lines in 1991 — became the substrate for almost everything and kept doubling
-        every few years, crossing 40 million lines by 2025. Open source and package registries turned
-        "don't reinvent the wheel" into an avalanche: npm alone went from zero to 4 million packages,
-        each one a node in a dependency graph nobody fully controls. The security surface grew in
-        lockstep — under a thousand CVEs a year in the late 1990s, nearly 40,000 today — not because
-        developers got worse, but because there is exponentially more code to attack. Meanwhile the
-        stack kept fragmenting: containers, orchestrators, CI pipelines, cloud services, type systems,
-        bundlers, linters — a typical project now touches over 80 distinct technologies. Add it all up
-        and the total decision points a developer is responsible for — every branch in their code and
-        their dependencies — jumped from a few hundred to 14 million. These lines compound each
-        other: more packages mean more CVEs, more technologies mean more integration surface, more
-        branches mean more places for things to quietly break.
+        In the 1970s a senior developer wrote assembly for a single mainframe and the whole program
+        fit on a stack of punch cards. C and Unix made code portable. PCs multiplied the audience but
+        the tools stayed simple — one compiler, one editor, a Makefile. The web broke that: software
+        suddenly had to run on unknown browsers, talk to remote servers, and handle millions of users.
+        Linux became the substrate for almost everything. Open source turned "don't reinvent the wheel"
+        into an avalanche of shared dependencies nobody fully controls. The security surface grew in
+        lockstep — not because developers got worse, but because there was exponentially more code to
+        attack. The stack kept fragmenting into containers, orchestrators, CI pipelines, cloud services,
+        and dozens more tools. These lines all compound each other: more packages mean more
+        vulnerabilities, more technologies mean more integration surface, more decision points mean
+        more places for things to quietly break.
       </p>
     </div>
 
