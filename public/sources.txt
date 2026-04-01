@@ -1,0 +1,381 @@
+# Sources for skills-timeline.json validation
+
+## Complexity chart — data sources
+
+### Linux kernel Lines of Code
+- 1991 (v0.01): 10,239 LoC — https://github.com/satoru-takeuchi/linux-kernel-statistics
+- 1994 (v1.0): ~170,000 LoC — https://www.stackscale.com/blog/linux-kernel-surpasses-40-million-lines-code/
+- 2009 (v2.6.32): 12,610,030 — https://en.wikipedia.org/wiki/Linux_kernel_version_history
+- 2011 (v3.0): 14,646,952 — Wikipedia Linux kernel version history
+- 2015 (v4.1): ~19.5M — Tom's Hardware
+- 2018 (v4.14): 20,088,609 — https://www.linux.com/news/linux-in-2020-27-8-million-lines-of-code-in-the-kernel-1-3-million-in-systemd/
+- 2020: 27,800,000 — https://www.linux.com/news/linux-in-2020-27-8-million-lines-of-code-in-the-kernel-1-3-million-in-systemd/
+- 2025 (v6.14-rc1): 40,063,856 — https://www.tomshardware.com/software/linux/linux-kernel-source-expands-beyond-40-million-lines-it-has-doubled-in-size-in-a-decade
+  - Growth rate: ~400K LoC every 2 months post-2015
+
+### npm package count
+- June 2019: 1,000,000 packages milestone — https://snyk.io/blog/npm-passes-the-1-millionth-package-milestone-what-can-we-learn/
+  - 250% platform growth Jan 2017 – Jun 2019
+- July 2023: 3,342,873 packages — https://blog.sandworm.dev/state-of-npm-2023-the-overview
+  - 1,390,303 new packages in preceding 12 months
+- 2024: ~3.1M+ — https://en.wikipedia.org/wiki/Npm_(software)
+- 2018: avg web app has 1,000+ modules, dependency tree depth 2,000+ — https://blog.npmjs.org/post/180868064080/this-year-in-javascript-2018-in-review-and-npms.html
+
+### Annual CVE counts (NVD / CVE Details / Comparitech)
+- Historical counts by year: https://www.cvedetails.com/
+- https://cve.icu/years.html
+- https://nvd.nist.gov/vuln/search/statistics
+- 2016: 6,449 | 2017: 14,643 (major spike) | 2018: 16,510
+- 2020: 18,323 | 2021: 20,153 | 2022: 25,084 | 2023: 29,066
+  — https://www.comparitech.com/blog/information-security/cybersecurity-vulnerability-statistics/
+- Total CVEs in NVD database: 240,000+ (Nov 2024) — https://en.wikipedia.org/wiki/National_Vulnerability_Database
+- 2025–2026 values: extrapolated linear trend
+
+### Tech stack size (heuristic estimate)
+- No published primary source; estimated from job postings, architecture diagrams,
+  and CNCF landscape growth (100 projects in 2016 → 1,000+ in 2024)
+  — https://landscape.cncf.io/
+- Stated as "odhad" (estimate) in the chart label
+
+## SQL a relační databáze
+- SQL developed at IBM by Chamberlin & Boyce (SEQUEL paper): 1974
+- Oracle releases first commercial relational DB: 1979
+- IBM SQL/DS: 1981; IBM DB2: 1983
+- SQL becomes ANSI/ISO standard: 1986 — https://en.wikipedia.org/wiki/SQL
+- MySQL: 1995; PostgreSQL (freeware): 1996
+- ORM frameworks reduce direct SQL: Hibernate 2001, ActiveRecord (Rails) 2004, Entity Framework 2008
+- NoSQL movement: MongoDB 2009, Redis 2009, Cassandra 2008
+  - https://en.wikipedia.org/wiki/NoSQL
+- Cloud managed databases (RDS, Cloud SQL, Aurora) shift expectation away from raw SQL tuning
+- Stack Overflow 2023: SQL still 3rd most used language (48%) but role shifting to ORMs/ORM-first
+
+## Desktop / nativní GUI
+- Xerox Alto GUI: 1973 (research); Xerox Star (commercial): 1981
+- Apple Lisa: 1983; Apple Macintosh: 1984 — https://en.wikipedia.org/wiki/Apple_Macintosh
+- Windows 1.0: 1985; Windows 3.0: 1990 (first widely adopted); Windows 3.1: 1992
+- Win32 API: Windows NT 3.1 (1993); MFC 1.0: 1992
+- Delphi 1.0: 1995 (rapid GUI development for Windows)
+- Windows 95: August 1995 — peak of desktop GUI era
+- Web apps (CGI, then ASP, PHP) begin competing: 1996–2000
+- iPhone: 2007 — decisive shift to mobile/web paradigms
+- Desktop GUI as mainstream senior expectation collapses ~2004–2010
+- Electron (web-tech desktop): 2013 — minor partial recovery but not traditional GUI
+  - https://en.wikipedia.org/wiki/Electron_(software_framework)
+
+## Design patterns (GoF)
+- Christopher Alexander's "A Pattern Language": 1977 (original inspiration)
+- Kent Beck & Ward Cunningham introduce patterns to software: 1987 (OOPSLA paper)
+- "Design Patterns: Elements of Reusable Object-Oriented Software" (GoF): October 1994
+  - Authors: Gamma, Helm, Johnson, Vlissides
+  - https://en.wikipedia.org/wiki/Design_Patterns
+- Java (1995) and its enterprise ecosystem popularized GoF patterns as near-mandatory vocabulary
+- J2EE patterns proliferate: 1999–2005 (DAO, Facade, Singleton everywhere)
+- Functional programming pushback against OOP pattern overuse: ~2010–2015
+  - "Simple Made Easy" Rich Hickey (2011); "Why OO Sucks" Joe Armstrong
+- Modern decline: microservices, functional idioms, and LLMs reduce need for rote pattern knowledge
+- GoF book added to KEY_EVENTS annotation on chart at 1994
+
+## Vícevláknové programování
+- POSIX threads (pthreads) IEEE standard draft: 1988; finalized POSIX.1c: 1995
+  - https://en.wikipedia.org/wiki/Pthreads
+- OS/2 multithreading: 1987; Windows NT preemptive multithreading: 1993
+- Java Thread API: 1995 (built-in, widely taught)
+- Intel Pentium D (first consumer dual-core): 2005 — concurrency becomes mandatory
+- Intel Core 2 Quad (quad-core): 2007 — "concurrency crisis" peaks
+- Go goroutines: 2009; async/await: C# 2012, Python 3.4 2014, JavaScript (ES2017) 2017
+- Reactive frameworks (RxJava 2013, Akka, Project Reactor) abstract raw threading
+- Modern async patterns largely replace manual thread management for most senior devs
+
+## Distribuce software
+- Floppy disk software distribution: late 1970s–1980s
+- BBS (Bulletin Board System) shareware: 1978–mid-1990s
+- CD-ROM distribution: mainstream from ~1991; peaked ~1995–2000
+- InstallShield first version: 1990; became Windows installer standard ~1994
+  - https://en.wikipedia.org/wiki/InstallShield
+- Windows Installer (MSI) standard: 1999
+- Web downloads supplement/replace CDs: 1996–2003
+- Auto-updaters (WinUpdate, Firefox): 2002–2005
+- Apple App Store: 2008 — transforms software distribution model
+- Google Play: 2012
+- Docker: 2013 — containerized distribution
+- CI/CD pipelines absorb distribution concerns: 2015–2020 (now covered by CI/CD pipeline mastery skill)
+
+## Version Control History (Verzování skill)
+- SCCS (Source Code Control System): developed 1972 at Bell Labs by Marc Rochkind;
+  distributed with UNIX in Programmer's Workbench (PWB/UNIX) from 1977
+  - https://en.wikipedia.org/wiki/Source_Code_Control_System
+  - https://machaddr.substack.com/p/the-history-and-influence-of-sccs
+- RCS (Revision Control System): released 1982 by Walter Tichy (Purdue Univ.);
+  replaced SCCS as Unix standard through mid-1980s
+  - https://en.wikipedia.org/wiki/Revision_Control_System
+  - https://experimentalworks.net/posts/2024-03-18-a-history-of-vcs-part1/
+- CVS (Concurrent Versions System): v0 by Dick Grune 1986; CVS 1.0 by Brian Berliner 1990;
+  dominant in open source (GNU, Linux) through late 1990s–early 2000s
+  - https://en.wikipedia.org/wiki/Concurrent_Versions_System
+- SVN (Subversion): released 2000; became most popular centralized VCS by ~2006;
+  supplanted CVS in enterprise and many open source projects
+  - https://en.wikipedia.org/wiki/Apache_Subversion
+- Git: created by Linus Torvalds, first released April 6, 2005 (Linux kernel)
+  - GitHub launched April 2008 — catalyzed mainstream Git adoption
+- Stack Overflow VCS adoption data:
+  - 2015: Git 69.3%, SVN 36.9% — https://survey.stackoverflow.co/2015
+  - 2018: Git 87%, SVN 16% — https://survey.stackoverflow.co/2018
+  - 2022: Git 93%+ — https://survey.stackoverflow.co/2022/
+  - 2025: Git 93.87% — https://survey.stackoverflow.co/2025/
+  - Detailed analysis: https://stackoverflow.blog/2023/01/09/beyond-git-the-other-version-control-systems-developers-use/
+- Bitbucket 2020: announced end of Mercurial support, citing 90% of devs use Git, <1% new projects use Mercurial
+- History overview: https://dev.to/thefern/history-of-version-control-systems-vcs-43ch
+- https://initialcommit.com/blog/Technical-Guide-VCS-Internals
+
+## Stack Overflow Developer Surveys (version control, tooling, AI adoption)
+- 2013: https://insights.stackoverflow.com/survey/2013
+- 2015: https://insights.stackoverflow.com/survey/2015
+  - Git overtook SVN as most-used VCS (~69% Git)
+- 2017: https://insights.stackoverflow.com/survey/2017
+- 2018: https://insights.stackoverflow.com/survey/2018
+  - Git at 87% of professional developers
+- 2019: https://insights.stackoverflow.com/survey/2019
+- 2020: https://insights.stackoverflow.com/survey/2020
+- 2021: https://insights.stackoverflow.com/survey/2021
+- 2022: https://survey.stackoverflow.co/2022/
+  - Git at 93-94% of professional developers; Git essentially universal
+- 2023: https://survey.stackoverflow.co/2023/
+  - 44% of developers using AI tools; 26% not using but planning to
+- 2024: https://survey.stackoverflow.co/2024/
+  - 62% of professional developers using AI coding tools (up from 44% in 2023)
+  - GitHub Copilot most used AI tool (~55% of AI tool users)
+  - AWS at ~49%, Azure ~28%, GCP ~26% of professional developers
+  - Trust in AI accuracy: only 43%
+- 2025: https://survey.stackoverflow.co/2025/
+  - AI adoption reaching ~80%; trust continues declining
+- Blog post (2025): https://stackoverflow.blog/2025/01/01/developers-want-more-more-more-the-2024-results-from-stack-overflow-s-annual-developer-survey/
+- Blog post (git & VCS): https://stackoverflow.blog/2023/01/09/beyond-git-the-other-version-control-systems-developers-use/
+
+## JetBrains State of Developer Ecosystem
+- 2021: https://www.jetbrains.com/lp/devecosystem-2021/
+  - ~60-70% of developers writing unit tests regularly
+- 2023: https://www.jetbrains.com/lp/devecosystem-2023/
+  - 75% of respondents using AI tools at least occasionally
+- 2025: https://blog.jetbrains.com/research/2025/10/state-of-developer-ecosystem-2025/
+
+## DORA / State of DevOps Reports
+- Annual reports 2014-2024: https://dora.dev/research/
+  - Key data point: CI/CD adoption and elite performer metrics
+- 2022 DORA report: https://cloud.google.com/blog/products/devops-sre/dora-2022-accelerate-state-of-devops-report
+
+## CI/CD History
+- Jenkins community survey 2016: https://www.jenkins.io/blog/2016/04/07/jenkins-community-survey-results-blog/
+  - By 2015: 92% of Jenkins users called it mission-critical; 59% using for CI + 30% extending to CD
+- JetBrains CI/CD survey 2025: https://blog.jetbrains.com/teamcity/2025/10/the-state-of-cicd/
+- CI/CD tooling history: https://medium.com/@DiggerHQ/a-brief-history-of-ci-cd-tooling-5a67c2638f3a
+  - CruiseControl: 2001; Hudson: 2005; Jenkins fork: 2011; GitLab CI: 2015; GitHub Actions GA: 2019
+
+## GitHub Copilot
+- GA announcement (June 21, 2022): https://visualstudiomagazine.com/articles/2022/06/21/github-copilot-ga.aspx
+  - Technical preview ran ~12 months; 1.2M devs in preview; ~40% of code in Python written by Copilot
+- TechCrunch GA announcement: https://techcrunch.com/2022/05/24/copilot-githubs-ai-powered-coding-tool-will-become-generally-available-this-summer/
+- Evolution article: https://tlconsulting.com.au/blogs/the-evolution-of-github-copilot-from-code-suggestions-to-ai-pair-programming/
+
+## AI Tool Adoption Statistics
+- Second Talent 2025 statistics: https://www.secondtalent.com/resources/ai-coding-assistant-statistics/
+  - 80% of developers use AI tools; 91% adoption in engineering organizations (2025 DORA)
+  - 82% use AI coding assistants daily or weekly
+- MIT Technology Review (Dec 2025): https://www.technologyreview.com/2025/12/15/1128352/rise-of-ai-coding-developers-2026/
+- DX AI-assisted engineering Q4 2025: https://getdx.com/blog/ai-assisted-engineering-q4-impact-report-2025/
+- StackOverflow 2025 AI developer survey: https://survey.stackoverflow.co/2025/ai
+  - Developers "willing but reluctant" — adoption rising but trust declining
+
+## Automated Testing / TDD History
+- TDD Wikipedia: https://en.wikipedia.org/wiki/Test-driven_development
+  - SUnit (Kent Beck): 1994; JUnit: 1997; TDD term formalized 1998-2002
+- Kent Beck "Test Driven Development: By Example": 2002 (key inflection point for mainstream adoption)
+- Agile Alliance on TDD: https://agilealliance.org/glossary/tdd/
+- TDD guide (BrowserStack): https://www.browserstack.com/guide/what-is-test-driven-development
+
+## Refactoring History
+- Martin Fowler "Refactoring: Improving the Design of Existing Code": June 1999 (1st ed)
+  - Defined vocabulary and catalog; inflection point for expectation of senior devs
+- Refactoring catalog: https://refactoring.com/
+- Martin Fowler blog: https://martinfowler.com/
+- IntelliJ IDEA: automated refactoring pioneered 2001; Eclipse followed 2001-2004
+
+## Observability / Monitoring History
+- Prometheus: created at SoundCloud 2012; open-sourced 2015; CNCF 2016
+- Grafana: 2014
+- "Three pillars of observability" (logs, metrics, traces): articulated by Peter Bourgon ~2016-2017
+- Jaeger (distributed tracing, Uber): 2017
+- OpenTelemetry: 2019 (merger of OpenTracing and OpenCensus)
+  - https://opentelemetry.io/docs/what-is-opentelemetry/
+- OpenTelemetry primer: https://opentelemetry.io/docs/concepts/observability-primer/
+- IBM three pillars of observability: https://www.ibm.com/think/insights/observability-pillars
+- Google SRE book (2016): https://sre.google/sre-book/table-of-contents/
+  - Key influence on observability as a senior developer concern
+- CNCF Annual Survey 2023 (Prometheus/Jaeger/OpenTelemetry adoption): https://www.cncf.io/reports/cncf-annual-survey-2023/
+
+## Microservices / Distributed Systems
+- Martin Fowler microservices article (March 2014): https://martinfowler.com/articles/microservices.html
+  - Term "microservices" mainstream from this publication
+- Netflix pioneered microservices: began 2009, completed 2011; announced at QCon 2010
+- Amazon transitioned to microservices: 2011
+- Docker: March 2013
+- Kubernetes: June 2014 (open-sourced by Google); GA 2015
+- Kubernetes mainstream: 2017
+- Microservices mainstream: ~2018-2020
+- RisingStack Kubernetes history: https://blog.risingstack.com/the-history-of-kubernetes/
+
+## Cloud Architecture
+- AWS S3: March 2006; EC2: August 2006 — https://en.wikipedia.org/wiki/Amazon_Web_Services
+- Azure: February 2010; GCP: 2011
+- AWS profitability reported: Q1 2015 ($1.57B revenue)
+- InfoWorld 2015 cloud adoption: https://www.infoworld.com/article/2242793/2015-was-a-banner-year-for-the-cloud.html
+
+## Security / OWASP
+- OWASP founded: 2001; Developer Guide v1.0: 2002; OWASP Top 10 first published: 2003
+  - https://owasp.org/www-project-developer-guide/
+- Microsoft SDL: 2004
+- SANS study (2009): 60%+ of internet attacks target web applications
+- OWASP Top 10 (2021): https://owasp.org/www-project-top-ten/
+- Log4Shell vulnerability: December 2021 — major accelerator of security expectations
+- SolarWinds supply chain attack: December 2020
+
+## Accessibility (a11y)
+- WCAG 1.0: May 1999 (W3C)
+- Section 508 (US Federal): 2001
+- WCAG 2.0: December 2008
+- WCAG 2.1: June 2018
+- WCAG 2.2: October 2023
+- First high-profile ADA web lawsuit: 2006 (National Federation of the Blind v. Target)
+- ADA lawsuits accelerated post-2015: jumped from ~800 in 2017 to ~2,300 in 2018
+- Robles v. Domino's Pizza: 9th Circuit ruling 2019 (watershed moment)
+- ADA federal filings exceeded 4,000 in 2024
+- EU Web Accessibility Directive: 2016 (enforcement 2018-2021)
+- Level Access milestones timeline: https://www.levelaccess.com/blog/key-milestones-in-web-accessibility-law-from-the-signing-of-the-ada-to-today/
+- AudioEye ADA compliance overview: https://www.audioeye.com/post/ada-compliance-lawsuit/
+- ADA.gov web guidance: https://www.ada.gov/resources/web-guidance/
+
+## Agile / Iterative Delivery
+- Agile Manifesto: February 13, 2001 — https://agilemanifesto.org/history.html
+- Digital.ai State of Agile Report (annual since 2006): https://digital.ai/resource-center/analyst-reports/state-of-agile-report/
+  - 17th Annual report (2023): 71% of organizations using Agile methods
+- Scrum Alliance State of Scrum: https://www.scrumalliance.org/
+- "Continuous Delivery" book (Humble & Farley): 2010
+
+## Dependency Management
+- CPAN (Perl): 1995 — first major public package repository
+- Maven (Java): 2004
+- RubyGems: 2004
+- pip (Python): 2008 (easy_install 2004)
+- npm (Node.js): January 12, 2010 — https://en.wikipedia.org/wiki/Npm
+- Bundler (Ruby): 2010; Composer (PHP): 2012; Cargo (Rust): 2014; Yarn: 2016
+- npm history article: https://blog.rashedin.dev/the-history-of-npm
+
+## Git / Version Control
+- Git created by Linus Torvalds: April 2005
+- GitHub launched: April 2008
+- GitLab: 2011
+- Stack Overflow 2013 survey: Git at ~56% of respondents (first year tracked)
+- Stack Overflow 2015: Git overtook SVN
+- Stack Overflow 2018: Git at 87%
+- Stack Overflow 2022: Git at 93-94%, essentially universal for professional developers
+
+## Developer Population Estimates (worldwide)
+- Evans Data Corporation Global Developer Population reports:
+  - 2015: ~18.5M — https://evansdata.com/press/viewRelease.php?pressID=216
+  - 2017: ~22.3M — https://evansdata.com/press/viewRelease.php?pressID=247
+  - 2019: ~26.4M — https://evansdata.com/press/viewRelease.php?pressID=278
+- SlashData State of the Developer Nation Q1 2022: ~31.1M developers
+  — https://www.slashdata.co/developer-program-benchmarking
+- Stack Overflow Developer Survey 2023: ~28.7M estimated professional developers
+  — https://survey.stackoverflow.co/2023/
+- BLS Occupational Outlook Handbook – Software Developers (US numbers, extrapolated)
+  — https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm
+- GitHub Octoverse 2021: 73M GitHub accounts (not all active developers, used as upper bound)
+  — https://octoverse.github.com/2021/
+- Projected 2025–2026 values account for AI-assisted development lowering barriers to entry;
+  2025 DORA report: 91% of engineering orgs adopted AI tools.
+
+---
+# Corrections applied to skills-timeline.json
+
+## Automatizované testování (Automated testing)
+- PROBLEM: Original curve started rising in 1985; value of 5.5 in 2000 was too high.
+- FIX: Curve now flat at 2.0 until 1996. Rise begins 1997 (JUnit creation).
+  Midpoint shifted to 2008 (Agile mainstream). 2000 corrected from 5.5 → 2.4.
+- RATIONALE: JUnit: 1997. TDD book (Kent Beck): 2002. Agile mainstream: 2006-2010.
+  Senior dev expectation of automated testing solidified ~2014-2018.
+
+## Refaktoring kódu (Code refactoring)
+- PROBLEM: Original curve started rising in 1990; value of 4.61 in 2000 was too high.
+- FIX: Curve flat at 3.0 until 1998. Rise begins 1999 (Fowler's "Refactoring" book).
+  Midpoint shifted to 2007. 2000 corrected from 4.61 → 3.48.
+- RATIONALE: Fowler's book (1999) established the vocabulary and catalog.
+  IDE automated refactoring: IntelliJ 2001, Eclipse 2001-2004.
+  Agile/XP practices drove mainstream adoption 2004-2010.
+
+## Observabilita systému (System observability)
+- PROBLEM: Original curve started rising in 2005 and reached 5.5 by 2015 — too high.
+  "Three pillars" (logs+metrics+traces) concept only articulated ~2016-2017.
+- FIX: Flat at 1.0 until 2009. Rise begins 2010 (Graphite/StatsD era).
+  Midpoint shifted to 2018 (OpenTelemetry formation year).
+  2015 corrected from 5.5 → 3.23; 2018 corrected from 7.11 → 5.5.
+- RATIONALE: Prometheus: 2012 (open-sourced 2015). Google SRE book: 2016.
+  "Three pillars" term: 2016-2017. OpenTelemetry: 2019.
+  Observability as mainstream senior expectation: ~2019-2022.
+
+## Prompt engineering
+- PROBLEM: 2024 value of 4.0 and 2026 value of 6.15 underestimated rapid adoption.
+- FIX: 2022: 1.85→2.5, 2023: 2.83→3.75, 2024: 4.0→5.0, 2025: 5.17→6.5, 2026: 6.15→7.5
+- RATIONALE: ChatGPT launched Nov 2022; GitHub Copilot GA June 2022.
+  SO 2024: 62% devs using AI tools. SO 2025: ~80%+ adoption.
+  Prompt engineering increasingly expected of senior devs by 2025-2026.
+
+## Validace AI výstupů (AI output validation)
+- PROBLEM: 2024 value of 4.5 and 2026 value of 6.92 too low given trust gap data.
+- FIX: 2022: 2.08→3.0, 2023: 3.19→4.5, 2024: 4.5→6.0, 2025: 5.81→7.5, 2026: 6.92→8.5
+- RATIONALE: SO 2024: AI trust at only 43% despite 62% adoption.
+  SO 2025: trust declining further despite growing adoption.
+  Critically reviewing AI-generated code is rapidly becoming a must-have senior skill.
+
+## Verzování (Version Control) — replaces "Distribuované verzování Git"
+- PROBLEM: Original curve was Git-specific, starting at 1.0 through 2004 then rising from 2005.
+  This erased 30+ years of VCS history (SCCS, RCS, CVS, SVN).
+- FIX: Renamed to "Verzování". Curve now starts rising from 1972 (SCCS), accelerates through
+  CVS era (1990: 4.5), SVN era (2000: 7.3), reaches near-universal by 2015 (9.9) and 10 by 2016.
+- RATIONALE: RCS (1982) established VCS as expected practice in Unix/academic environments.
+  CVS (1990) brought it to open source. SVN (2000) made it a professional standard.
+  Git (2005) + GitHub (2008) completed the transition to universal adoption.
+  SO 2015: Git 69%, SO 2018: 87%, SO 2022: 93%+.
+
+## Hardware category — split from Technical Core
+- PROBLEM: "Hardwarové uvažování" and "Práce s pamětí" are hardware-specific skills
+  that do not belong in the general Technical Core category alongside language mastery,
+  debugging, testing etc.
+- FIX: Created new "Hardware" category (color #b0c4de / light steel blue).
+  Moved both skills to "hardware".
+- RATIONALE: Both skills track the decline of hardware awareness as managed runtimes
+  (JVM, .NET CLR, V8) and high-level languages abstracted away memory and hardware details.
+  Isolating them visually makes the decline trend clearer.
+
+## Programování category — AI-era decline corrections (2023–2026)
+- RATIONALE: SO 2024: 62% of devs use AI tools but only 43% trust AI accuracy.
+  SO 2025: adoption ~80%, trust continuing to decline. This trust gap means senior
+  developers are expected to EVALUATE AI output rather than write everything from scratch,
+  reducing the absolute requirement level for implementation skills.
+- Mistrovství syntaxe jazyka: 2024: 8.8→8.5, 2025: 8.3→7.8, 2026: 7.8→7.0
+  (syntax generation is LLMs' strongest capability)
+- Porozumění sémantice a runtime: 2023: 10→9.8, 2024: 10→9.5, 2025: 10→9.2, 2026: 10→9.0
+  (gentlest decline — runtime understanding critical for validating AI-generated code)
+- Algoritmické uvažování: 2023: 9→8.7, 2024: 9→8.3, 2025: 9→8.0, 2026: 9→7.5
+  (LLMs implement standard algorithms well; evaluative ability remains expected)
+- Volba datových struktur: 2023: 8.5→8.2, 2024: 8.5→7.8, 2025: 8.5→7.4, 2026: 8.5→7.0
+  (LLMs suggest appropriate structures; senior devs evaluate, not implement from scratch)
+- Refaktoring kódu: 2023: 9→8.8, 2024: 9→8.4, 2025: 9→8.0, 2026: 9→7.5
+  (AI tools handle mechanical refactoring; architectural judgment remains human)
+- Správa závislostí: 2024: 9→8.7, 2025: 9→8.3, 2026: 9→8.0
+  (smallest decline — security/compatibility judgment still requires human expertise)
+
+## Orchestrace AI workflow (AI workflow orchestration)
+- PROBLEM: 2024-2026 values slightly underestimated given agent/workflow tooling surge.
+- FIX: 2024: 2.32→2.5, 2025: 3.5→3.75, 2026: 4.68→5.0
+- RATIONALE: Claude Code, GitHub Copilot Workspace, Cursor agents, etc. emerging 2024-2025.
+  Still nascent enough that major changes were not warranted; minor bump applied.

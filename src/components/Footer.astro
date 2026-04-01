@@ -1,39 +1,62 @@
 ---
 ---
-<footer style="
-  border-top:1px solid #3a3a3a;
-  padding:2.5rem 2rem;
-  text-align:center;
-  margin-top:2rem;
-">
-  <div style="max-width:700px;margin:0 auto;">
-    <p style="color:#94a3b8;font-size:0.9rem;line-height:1.7;margin-bottom:0.75rem;">
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-data">
       Data model: heuristic logistic S-curve estimate · not absolute truth ·
       Validated against Stack Overflow Dev Surveys, JetBrains Dev Ecosystem, DORA, CNCF, Martin Fowler
     </p>
-    <p style="color:#64748b;font-size:0.85rem;line-height:1.7;">
+    <p class="footer-links">
       Built with love and shared openly with the community.
       <br />
       Powered by
-      <a
-        href="https://cookielab.io"
-        target="_blank"
-        rel="noopener noreferrer"
-        style="color:#FFCD68;text-decoration:none;font-weight:600;"
-        onmouseover="this.style.textDecoration='underline'"
-        onmouseout="this.style.textDecoration='none'"
-      >Cookielab</a>
+      <a href="https://cookielab.io" target="_blank" rel="noopener noreferrer" class="footer-link-gold">Cookielab</a>
        · <em>giving back to the developer community</em>
       <br />
-      <a
-        href="https://github.com/cookielab/blog-devdrift"
-        target="_blank"
-        rel="noopener noreferrer"
-        style="color:#94a3b8;text-decoration:none;font-weight:600;"
-        onmouseover="this.style.textDecoration='underline'"
-        onmouseout="this.style.textDecoration='none'"
-      >GitHub</a>
+      <a href="https://github.com/cookielab/blog-devdrift" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
        · <em>see the source</em>
+      <br />
+      <a href="/sources.txt" class="footer-link">Sources</a>
+       · <em>data references &amp; methodology</em>
     </p>
   </div>
 </footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid #3a3a3a;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin-top: 2rem;
+  }
+  .footer-inner {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .footer-data {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+  .footer-links {
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+  .footer-link-gold,
+  .footer-link {
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .footer-link-gold {
+    color: #FFCD68;
+  }
+  .footer-link {
+    color: #94a3b8;
+  }
+  .footer-link-gold:hover,
+  .footer-link:hover {
+    text-decoration: underline;
+  }
+</style>
