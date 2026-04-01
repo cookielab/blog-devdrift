@@ -62,13 +62,27 @@ import ComplexityChart from '../components/ComplexityChart';
     <SkillFilters client:only="react" />
   </ChartSection>
 
-  <ChartSection
-    id="population"
-    title="Developer Population"
-    subtitle="When the developer population doubles every 8 years, half of all developers have less than 8 years of experience — seniors are always a minority"
-  >
-    <PopulationChart client:only="react" />
-  </ChartSection>
+  <section id="population" class="population-section">
+    <div class="population-header">
+      <h2>Developer Population</h2>
+      <p class="population-story">
+        In 1970 fewer than 100,000 people worldwide wrote code — mostly academics and defense
+        contractors working on mainframes. The personal computer changed that: by the mid-1980s
+        anyone with a desk could program. Then the web exploded the numbers again — the dot-com
+        boom pulled millions into the field between 1995 and 2000, and even the bust that followed
+        barely dented the trajectory. Smartphones, cloud computing, and the startup gold rush of the
+        2010s kept the curve steep, while coding bootcamps and free online courses lowered the
+        barrier to entry almost to zero. The result: the developer population roughly doubles every
+        eight years. That growth rate is exactly why senior developers are so scarce — when half of
+        all developers have less than eight years of experience at any given moment, seniority is
+        a mathematical minority, not a failure of hiring.
+      </p>
+    </div>
+
+    <div class="population-chart-card">
+      <PopulationChart client:only="react" />
+    </div>
+  </section>
 
   <section id="complexity" class="complexity-section">
     <div class="complexity-header">
@@ -144,6 +158,50 @@ import ComplexityChart from '../components/ComplexityChart';
   </section>
 
   <style>
+    .population-section {
+      padding: 3.5rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .population-header {
+      max-width: 65ch;
+      margin: 0 auto 1.5rem;
+    }
+    .population-header h2 {
+      font-family: 'Raleway', 'Arial Black', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #F2F0E5;
+      margin-bottom: 0.35rem;
+    }
+    .population-story {
+      color: #94a3b8;
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+    .population-chart-card {
+      background: #252525;
+      border: 1px solid #3a3a3a;
+      border-radius: 1rem;
+      padding: 1.5rem 1.5rem 1rem;
+      position: relative;
+    }
+    @media (max-width: 768px) {
+      .population-section {
+        padding: 2rem 0;
+      }
+      .population-header {
+        padding: 0 2rem;
+      }
+      .population-chart-card {
+        padding: 1.5rem;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        overflow: hidden;
+      }
+    }
     .complexity-section {
       padding: 3.5rem 2rem;
       max-width: 1400px;

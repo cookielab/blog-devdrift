@@ -107,6 +107,7 @@ export default function PopulationChart() {
             plugins: {
               legend: {
                 display: true,
+                position: 'bottom' as const,
                 labels: {
                   color: '#94a3b8',
                   font: { size: 12, family: 'Inter' },
