@@ -426,16 +426,24 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
 
     chartRef.current = new Chart(ctx, config);
     return () => { chartRef.current?.destroy(); chartRef.current = null; };
-  }, [skills, categories, keyEvents, viewMode, hiddenSkills, isMobile]);
+  }, [skills, categories, keyEvents, viewMode, isMobile]);
 
   // Sync hidden state when activeCategories or hiddenSkills changes
   useEffect(() => {
     const chart = chartRef.current;
-    if (!chart) return;
+    if (!chart || !skills.length) return;
 
     if (viewMode === 'categories') {
+      // Recalculate averages in-place, excluding hidden skills
       chart.data.datasets.forEach((ds: any) => {
         ds.hidden = !activeCategories.has(ds._cat);
+        const catSkills = skills.filter(s => s.category === ds._cat && !hiddenSkills.has(s.name));
+        ds.data = YEARS.map(y => {
+          const vals = catSkills.map(s => s.values[String(y)] ?? 0);
+          const avg = vals.length ? vals.reduce((a: number, b: number) => a + b, 0) / vals.length : 0;
+          return { x: y, y: Math.round(avg * 100) / 100 };
+        });
+        ds._desc = `Average of ${catSkills.length} skills in ${ds._catLabel}`;
       });
     } else {
       chart.data.datasets.forEach((ds: any) => {
@@ -448,7 +456,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
     setHoveredSkill(null);
     setSelectedSkill(null);
     drawOverlay(chart, null);
-  }, [activeCategories, hiddenSkills, viewMode]);
+  }, [activeCategories, hiddenSkills, viewMode, skills]);
 
   const displayedSkill = selectedSkill ?? hoveredSkill;
 
