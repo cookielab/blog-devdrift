@@ -167,7 +167,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
           data: chartData,
           borderColor: cat.color,
           backgroundColor: 'transparent',
-          borderWidth: 3.5,
+          borderWidth: 2.5,
           borderDash: [],
           pointRadius: 0,
           pointHoverRadius: 0,
@@ -179,7 +179,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
           _catLabel: cat.label,
           _catColor: cat.color,
           _origColor: cat.color,
-          _origWidth: 3.5,
+          _origWidth: 2.5,
           _desc: `Average of ${catSkills.length} skills in ${cat.label}`,
         };
       });
