@@ -154,9 +154,9 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
     let datasets: any[];
 
     if (viewMode === 'categories') {
-      // Category averages view — 9 lines
+      // Category averages view — 9 lines (only from visible skills)
       datasets = Object.entries(categories).map(([key, cat]) => {
-        const catSkills = skills.filter(s => s.category === key);
+        const catSkills = skills.filter(s => s.category === key && !hiddenSkills.has(s.name));
         const chartData = YEARS.map(y => {
           const vals = catSkills.map(s => s.values[String(y)] ?? 0);
           const avg = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
@@ -426,7 +426,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
 
     chartRef.current = new Chart(ctx, config);
     return () => { chartRef.current?.destroy(); chartRef.current = null; };
-  }, [skills, categories, keyEvents, viewMode, isMobile]);
+  }, [skills, categories, keyEvents, viewMode, hiddenSkills, isMobile]);
 
   // Sync hidden state when activeCategories or hiddenSkills changes
   useEffect(() => {

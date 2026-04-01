@@ -178,7 +178,7 @@ export default function SkillFilters() {
               >
                 {cat.label}
               </button>
-              {breakdown && hasMultipleSkills && (
+              {hasMultipleSkills && (
                 <button
                   className="sf-btn"
                   onClick={() => toggleExpand(key)}
@@ -189,7 +189,7 @@ export default function SkillFilters() {
                 </button>
               )}
             </div>
-            {breakdown && isExpanded && isActive && (
+            {isExpanded && isActive && (
               <div style={{
                 display: 'flex',
                 flexWrap: 'wrap',
