@@ -10,10 +10,11 @@ import {
   type Plugin,
 } from 'chart.js';
 import { useMediaQuery } from './useMediaQuery';
+import { YEARS } from '../constants/chart';
+import { useFetchJson } from '../hooks/useFetchJson';
+import { timeXScale, baseYScale } from '../utils/chartDefaults';
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, Tooltip);
-
-const YEARS = Array.from({ length: 57 }, (_, i) => 1970 + i);
 
 const DASH_PATTERNS: number[][] = [
   [],
@@ -76,24 +77,14 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart | null>(null);
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [categories, setCategories] = useState<Record<string, CategoryMeta>>({});
-  const [keyEvents, setKeyEvents] = useState<KeyEvent[]>([]);
   const [hoveredSkill, setHoveredSkill] = useState<{ name: string; catLabel: string; catColor: string; desc: string; year: number; val: number; px: number; py: number } | null>(null);
   const [selectedSkill, setSelectedSkill] = useState<typeof hoveredSkill>(null);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  useEffect(() => {
-    Promise.all([
-      fetch(`${import.meta.env.BASE_URL}data/skills-timeline.json`).then(r => r.json()),
-      fetch(`${import.meta.env.BASE_URL}data/categories.json`).then(r => r.json()),
-      fetch(`${import.meta.env.BASE_URL}data/key-events.json`).then(r => r.json()),
-    ]).then(([skillData, catData, eventsData]) => {
-      setSkills(skillData.skills);
-      setCategories(catData);
-      setKeyEvents(eventsData);
-    });
-  }, []);
+  const rawSkillData = useFetchJson<{ skills: Skill[] }>('data/skills-timeline.json');
+  const categories = useFetchJson<Record<string, CategoryMeta>>('data/categories.json') ?? {};
+  const keyEvents = useFetchJson<KeyEvent[]>('data/key-events.json') ?? [];
+  const skills = rawSkillData?.skills ?? [];
 
   function drawOverlay(chart: Chart, elRef: { datasetIndex: number; index: number } | null) {
     const overlay = overlayRef.current;
@@ -350,31 +341,18 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
         },
         scales: {
           x: {
-            type: 'linear',
-            min: 1970,
+            ...timeXScale(isMobileNow),
             max: 2027,
-            ticks: {
-              color: '#64748b',
-              font: { size: isMobileNow ? 11 : 13 },
-              stepSize: isMobileNow ? 10 : 5,
-              callback: (v: any) => {
-                const step = isMobileNow ? 10 : 5;
-                return (Number.isInteger(v) && v % step === 0 && v <= 2026) ? String(v) : '';
-              },
-              maxRotation: 0,
-            },
             afterFit(scale: any) { scale.paddingRight = isMobileNow ? 8 : 12; },
-            grid: { color: 'rgba(58,58,58,0.8)' },
-            border: { color: '#3a3a3a' },
           },
           y: {
+            ...baseYScale(isMobileNow),
             min: 0,
             max: 10,
             ticks: {
-              color: '#64748b',
-              font: { size: isMobileNow ? 11 : 13 },
+              ...baseYScale(isMobileNow).ticks,
               stepSize: isMobileNow ? 2 : 1,
-              callback: (v: any) => {
+              callback: (v: number | string) => {
                 if (isMobileNow) return String(v);
                 if (v === 5) return '5 – useful';
                 if (v === 8) return '8 – required';
@@ -389,7 +367,6 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
                 return 'rgba(58,58,58,0.5)';
               },
             },
-            border: { color: '#3a3a3a' },
           },
         },
         plugins: {
