@@ -74,7 +74,7 @@ export default function ComplexityChart() {
             responsive: true,
             maintainAspectRatio: false,
             interaction: { mode: 'nearest', intersect: false },
-            animation: { duration: 300 },
+            animation: { duration: 400, easing: 'easeOutQuart' },
             scales: {
               x: {
                 type: 'linear',
@@ -136,7 +136,7 @@ export default function ComplexityChart() {
     chart.data.datasets.forEach((ds: any) => {
       ds.hidden = hidden.has(ds._key);
     });
-    chart.update('none');
+    chart.update();
   }, [hidden]);
 
   function toggle(key: string) {
