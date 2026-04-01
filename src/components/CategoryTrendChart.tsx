@@ -95,6 +95,7 @@ export default function CategoryTrendChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const justBuiltRef = useRef(false);
   const [skills, setSkills] = useState<SkillData[]>([]);
   const [selectedYear, setSelectedYear] = useState(2026);
   const [compareYear, setCompareYear] = useState<number | null>(2000);
@@ -218,6 +219,7 @@ export default function CategoryTrendChart() {
     });
 
     // Position HTML labels after chart renders
+    justBuiltRef.current = true;
     requestAnimationFrame(() => updateLabelPositions());
   }, [skills, isMobile]);
 
@@ -226,12 +228,14 @@ export default function CategoryTrendChart() {
     if (!chart || !skills.length) return;
 
     const primaryAvgs = computeAvgs(skills, selectedYear);
-    chart.data.datasets[0] = makePrimaryDataset(primaryAvgs, selectedYear) as any;
+    chart.data.datasets[0].data = primaryAvgs as any;
+    (chart.data.datasets[0] as any).label = String(selectedYear);
 
     if (compareYear !== null && compareYear !== selectedYear) {
       const compareAvgs = computeAvgs(skills, compareYear);
       if (chart.data.datasets.length > 1) {
-        chart.data.datasets[1] = makeCompareDataset(compareAvgs, compareYear) as any;
+        chart.data.datasets[1].data = compareAvgs as any;
+        (chart.data.datasets[1] as any).label = String(compareYear);
       } else {
         chart.data.datasets.push(makeCompareDataset(compareAvgs, compareYear) as any);
       }
@@ -255,6 +259,10 @@ export default function CategoryTrendChart() {
   // Update data in-place when year selection changes
   useEffect(() => {
     if (!chartRef.current) return;
+    if (justBuiltRef.current) {
+      justBuiltRef.current = false;
+      return;
+    }
     updateChart();
   }, [selectedYear, compareYear, updateChart]);
 
