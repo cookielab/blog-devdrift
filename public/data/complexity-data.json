@@ -1,6 +1,6 @@
 {
   "linuxLoc": {
-    "label": "Linux kernel (lines of code)",
+    "label": "Linux LOC",
     "color": "#60a5fa",
     "unit": "lines of code",
     "dash": [],
@@ -17,7 +17,7 @@
     }
   },
   "npmPackages": {
-    "label": "npm packages",
+    "label": "npm",
     "color": "#4ade80",
     "unit": "packages",
     "dash": [],
@@ -30,7 +30,7 @@
     }
   },
   "annualCve": {
-    "label": "CVEs per year",
+    "label": "CVEs",
     "color": "#f87171",
     "unit": "vulnerabilities / year",
     "dash": [5, 3],
@@ -44,7 +44,7 @@
     }
   },
   "stackTechCount": {
-    "label": "Technologies in typical stack (estimate)",
+    "label": "Stack Size",
     "color": "#fbbf24",
     "unit": "technologies",
     "dash": [3, 3],
@@ -61,7 +61,7 @@
     }
   },
   "projectBranches": {
-    "label": "Decision points incl. dependencies (estimate)",
+    "label": "Branches",
     "color": "#e879f9",
     "unit": "decision points",
     "dash": [],
