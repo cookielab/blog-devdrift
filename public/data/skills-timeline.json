@@ -540,7 +540,7 @@
     },
     {
       "name": "CI/CD Pipeline Mastery",
-      "category": "product",
+      "category": "obsluha_kodu",
       "description": "Building and managing delivery pipelines. Jenkins (2005), GitLab CI (2015), GitHub Actions (2019).",
       "values": {
         "1970": 2, "1971": 2, "1972": 2, "1973": 2, "1974": 2,
