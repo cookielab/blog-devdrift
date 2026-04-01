@@ -32,6 +32,8 @@ body {
   color: var(--color-offwhite);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  min-width: 420px;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4 {
