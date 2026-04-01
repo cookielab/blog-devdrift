@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import SkillsChart from './SkillsChart';
+import { useMediaQuery } from './useMediaQuery';
 
 const CATEGORIES: Record<string, { label: string; color: string }> = {
   technical_core: { label: 'Programming',   color: '#60a5fa' },
@@ -26,6 +27,7 @@ export default function SkillFilters() {
   const [skillsList, setSkillsList] = useState<SkillMeta[]>([]);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [breakdown, setBreakdown] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}data/skills-timeline.json`)
@@ -65,7 +67,7 @@ export default function SkillFilters() {
     });
   }
 
-  const viewMode = breakdown ? 'skills' as const : 'categories' as const;
+  const viewMode = breakdown && !isMobile ? 'skills' as const : 'categories' as const;
 
   const catLabelStyle = (isActive: boolean, color: string): React.CSSProperties => ({
     flex: 1,
@@ -155,7 +157,7 @@ export default function SkillFilters() {
       <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
         <button onClick={selectAll} className="sf-btn" style={utilBtnStyle(allActive)}>All</button>
         <button onClick={selectNone} className="sf-btn" style={utilBtnStyle(noneActive)}>None</button>
-        <button onClick={toggleBreakdown} className="sf-btn" style={utilBtnStyle(breakdown)}>Breakdown</button>
+        {!isMobile && <button onClick={toggleBreakdown} className="sf-btn" style={utilBtnStyle(breakdown)}>Breakdown</button>}
       </div>
       {Object.entries(CATEGORIES).map(([key, cat]) => {
         const isActive = activeCategories.has(key);
@@ -178,7 +180,7 @@ export default function SkillFilters() {
               >
                 {cat.label}
               </button>
-              {hasMultipleSkills && (
+              {!isMobile && hasMultipleSkills && (
                 <button
                   className="sf-btn"
                   onClick={() => toggleExpand(key)}
@@ -189,7 +191,7 @@ export default function SkillFilters() {
                 </button>
               )}
             </div>
-            {isExpanded && isActive && (
+            {!isMobile && isExpanded && isActive && (
               <div style={{
                 display: 'flex',
                 flexWrap: 'wrap',
