@@ -77,28 +77,28 @@ import ComplexityChart from '../components/ComplexityChart';
     </div>
 
     <div class="complexity-metrics">
-      <div class="complexity-metric">
-        <h3><span class="metric-dot" style="background:#60a5fa;"></span>Linux LOC</h3>
+      <details class="complexity-metric">
+        <summary><span class="metric-dot" style="background:#60a5fa;"></span>Linux LOC</summary>
         <p>
           Lines of code in the Linux kernel — the most widely deployed software on earth, running
           phones, servers, cars, and satellites. Its growth is a thermometer for platform complexity:
           when the kernel doubles, drivers, syscalls, and edge cases double with it, and every layer
           built on top inherits that weight. From 10K lines in 1991 to over 40 million today.
         </p>
-      </div>
+      </details>
 
-      <div class="complexity-metric">
-        <h3><span class="metric-dot" style="background:#e879f9;"></span>Branches</h3>
+      <details class="complexity-metric">
+        <summary><span class="metric-dot" style="background:#e879f9;"></span>Branches</summary>
         <p>
           Total decision points — every <code>if</code>, loop, and pattern-match — across a project
           and its entire dependency tree. Modern applications ship with thousands of transitive
           dependencies, each adding their own branching logic. This is the single best proxy for how
           much behavior a senior developer is implicitly responsible for when they hit "deploy".
         </p>
-      </div>
+      </details>
 
-      <div class="complexity-metric">
-        <h3><span class="metric-dot" style="background:#4ade80;"></span>npm</h3>
+      <details class="complexity-metric">
+        <summary><span class="metric-dot" style="background:#4ade80;"></span>npm</summary>
         <p>
           Total packages in the npm registry — the world's largest and a proxy for ecosystem
           fragmentation. More packages means more choices for every task, more transitive dependencies
@@ -106,20 +106,20 @@ import ComplexityChart from '../components/ComplexityChart';
           have evaluated a handful of libraries; today they inherit hundreds the moment they scaffold
           a project.
         </p>
-      </div>
+      </details>
 
-      <div class="complexity-metric">
-        <h3><span class="metric-dot" style="background:#f87171;"></span>CVEs</h3>
+      <details class="complexity-metric">
+        <summary><span class="metric-dot" style="background:#f87171;"></span>CVEs</summary>
         <p>
           Publicly disclosed security vulnerabilities per year. More CVEs means more patches to apply,
           more dependency upgrades to evaluate, and more time spent on security reviews instead of
           features. A direct measure of the "maintenance tax" that growing complexity imposes on
           every team.
         </p>
-      </div>
+      </details>
 
-      <div class="complexity-metric">
-        <h3><span class="metric-dot" style="background:#fbbf24;"></span>Stack Size</h3>
+      <details class="complexity-metric">
+        <summary><span class="metric-dot" style="background:#fbbf24;"></span>Stack Size</summary>
         <p>
           The number of distinct technologies a senior developer is expected to navigate in a typical
           project. In 1970 that meant an editor and a language. Today a single full-stack project may
@@ -127,7 +127,7 @@ import ComplexityChart from '../components/ComplexityChart';
           pipeline, a container runtime, an orchestrator, a cloud provider, and a dozen SaaS
           integrations. This is why "just learning the language" stopped being enough decades ago.
         </p>
-      </div>
+      </details>
     </div>
 
     <div class="complexity-chart-card">
@@ -160,19 +160,35 @@ import ComplexityChart from '../components/ComplexityChart';
     }
     .complexity-metrics {
       display: grid;
-      gap: 1.5rem;
+      gap: 0.25rem;
       max-width: 65ch;
       margin: 0 auto 2rem;
     }
-    .complexity-metric h3 {
+    .complexity-metric summary {
       font-family: 'Raleway', 'Arial Black', sans-serif;
       font-size: 1.1rem;
       font-weight: 700;
       color: #F2F0E5;
-      margin-bottom: 0.4rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      list-style: none;
+      cursor: default;
+      padding: 0.35rem 0;
+    }
+    .complexity-metric summary::-webkit-details-marker {
+      display: none;
+    }
+    .complexity-metric summary::after {
+      content: '+';
+      margin-left: auto;
+      color: #64748b;
+      font-size: 1.2rem;
+      font-weight: 400;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .complexity-metric[open] summary::after {
+      content: '−';
     }
     .metric-dot {
       display: inline-block;
@@ -185,6 +201,7 @@ import ComplexityChart from '../components/ComplexityChart';
       color: #94a3b8;
       line-height: 1.7;
       font-size: 0.95rem;
+      padding-bottom: 0.75rem;
     }
     .complexity-metric code {
       color: #F2F0E5;
