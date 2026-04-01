@@ -5,11 +5,12 @@ import {
   LineElement,
   PointElement,
   LinearScale,
+  LogarithmicScale,
   Tooltip,
 } from 'chart.js';
 import { useMediaQuery } from './useMediaQuery';
 
-Chart.register(LineController, LineElement, PointElement, LinearScale, Tooltip);
+Chart.register(LineController, LineElement, PointElement, LinearScale, LogarithmicScale, Tooltip);
 
 const YEARS = Array.from({ length: 57 }, (_, i) => 1970 + i);
 
@@ -20,7 +21,7 @@ function fmtCount(v: number): string {
   return String(v);
 }
 
-const SERIES_KEYS = ['linuxLoc', 'npmPackages', 'annualCve', 'stackTechCount', 'projectBranches'] as const;
+const SERIES_KEYS = ['linuxLoc', 'projectBranches', 'npmPackages', 'annualCve', 'stackTechCount'] as const;
 
 interface SeriesMeta {
   key: string;
@@ -33,101 +34,110 @@ export default function ComplexityChart() {
   const chartRef = useRef<Chart | null>(null);
   const [seriesMeta, setSeriesMeta] = useState<SeriesMeta[]>([]);
   const [hidden, setHidden] = useState<Set<string>>(new Set());
+  const [logScale, setLogScale] = useState(true);
   const isMobile = useMediaQuery('(max-width: 768px)');
+
+  const dataRef = useRef<any>(null);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}data/complexity-data.json`)
       .then(r => r.json())
       .then(data => {
-        const ctx = canvasRef.current?.getContext('2d');
-        if (!ctx) return;
-
+        dataRef.current = data;
         setSeriesMeta(SERIES_KEYS.map(key => ({
           key,
           label: data[key].label,
           color: data[key].color,
         })));
+      });
+  }, []);
 
-        const datasets = SERIES_KEYS.map(key => {
-          const series = data[key];
-          return {
-            label: series.label,
-            data: YEARS.map(y => ({ x: y, y: series.values[String(y)] ?? null })),
-            borderColor: series.color,
-            backgroundColor: 'transparent',
-            borderWidth: 3,
-            borderDash: series.dash,
-            pointRadius: 0,
-            pointHoverRadius: 5,
-            tension: 0.3,
-            _key: key,
-            _unit: series.unit,
-          } as any;
-        });
+  useEffect(() => {
+    const data = dataRef.current;
+    if (!data || !canvasRef.current) return;
 
-        const isMobileNow = window.matchMedia('(max-width: 768px)').matches;
+    const ctx = canvasRef.current.getContext('2d');
+    if (!ctx) return;
 
-        chartRef.current = new Chart(ctx, {
-          type: 'line',
-          data: { datasets },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'nearest', intersect: false },
-            animation: { duration: 400, easing: 'easeOutQuart' },
-            scales: {
-              x: {
-                type: 'linear',
-                min: 1970,
-                max: 2026,
-                ticks: {
-                  color: '#64748b',
-                  font: { size: isMobileNow ? 11 : 13 },
-                  stepSize: isMobileNow ? 10 : 5,
-                  maxRotation: 0,
-                  callback: (v: any) => {
-                    const step = isMobileNow ? 10 : 5;
-                    return (Number.isInteger(v) && v % step === 0) ? String(v) : '';
-                  },
-                },
-                grid: { color: 'rgba(58,58,58,0.8)' },
-                border: { color: '#3a3a3a' },
-              },
-              y: {
-                type: 'linear',
-                min: 0,
-                ticks: {
-                  color: '#64748b',
-                  font: { size: isMobileNow ? 11 : 13 },
-                  callback: (v: any) => fmtCount(v),
-                },
-                grid: { color: 'rgba(58,58,58,0.5)' },
-                border: { color: '#3a3a3a' },
+    const datasets = SERIES_KEYS.map(key => {
+      const series = data[key];
+      return {
+        label: series.label,
+        data: YEARS.map(y => ({ x: y, y: series.values[String(y)] ?? null })),
+        borderColor: series.color,
+        backgroundColor: 'transparent',
+        borderWidth: 3,
+        borderDash: series.dash,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        tension: 0.3,
+        _key: key,
+        _unit: series.unit,
+      } as any;
+    });
+
+    const isMobileNow = window.matchMedia('(max-width: 768px)').matches;
+
+    chartRef.current = new Chart(ctx, {
+      type: 'line',
+      data: { datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'nearest', intersect: false },
+        animation: { duration: 400, easing: 'easeOutQuart' },
+        scales: {
+          x: {
+            type: 'linear',
+            min: 1970,
+            max: 2026,
+            ticks: {
+              color: '#64748b',
+              font: { size: isMobileNow ? 11 : 13 },
+              stepSize: isMobileNow ? 10 : 5,
+              maxRotation: 0,
+              callback: (v: any) => {
+                const step = isMobileNow ? 10 : 5;
+                return (Number.isInteger(v) && v % step === 0) ? String(v) : '';
               },
             },
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                backgroundColor: '#252525',
-                borderColor: '#3a3a3a',
-                borderWidth: 1,
-                titleColor: '#F2F0E5',
-                titleFont: { size: 14 },
-                bodyColor: '#94a3b8',
-                bodyFont: { size: 13 },
-                padding: 14,
-                callbacks: {
-                  title: (items: any[]) => `${items[0].dataset.label}  ·  ${String(Math.round(items[0].parsed.x))}`,
-                  label: (item: any) => `${fmtCount(item.parsed.y)} ${(item.dataset as any)._unit}`,
-                },
-              },
+            grid: { color: 'rgba(58,58,58,0.8)' },
+            border: { color: '#3a3a3a' },
+          },
+          y: {
+            type: logScale ? 'logarithmic' : 'linear',
+            min: logScale ? 1 : 0,
+            ticks: {
+              color: '#64748b',
+              font: { size: isMobileNow ? 11 : 13 },
+              callback: (v: any) => fmtCount(v),
+            },
+            grid: { color: 'rgba(58,58,58,0.5)' },
+            border: { color: '#3a3a3a' },
+          },
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#252525',
+            borderColor: '#3a3a3a',
+            borderWidth: 1,
+            titleColor: '#F2F0E5',
+            titleFont: { size: 14 },
+            bodyColor: '#94a3b8',
+            bodyFont: { size: 13 },
+            padding: 14,
+            callbacks: {
+              title: (items: any[]) => `${items[0].dataset.label}  ·  ${String(Math.round(items[0].parsed.x))}`,
+              label: (item: any) => `${fmtCount(item.parsed.y)} ${(item.dataset as any)._unit}`,
             },
           },
-        });
-      });
+        },
+      },
+    });
 
     return () => { chartRef.current?.destroy(); chartRef.current = null; };
-  }, []);
+  }, [seriesMeta, logScale]);
 
   // Sync hidden state to chart
   useEffect(() => {
@@ -186,6 +196,24 @@ export default function ComplexityChart() {
               >{s.label}</button>
             );
           })}
+          <span style={{ marginLeft: 'auto', display: 'flex', gap: '0.3rem' }}>
+            {(['log', 'linear'] as const).map(mode => {
+              const active = mode === 'log' ? logScale : !logScale;
+              return (
+                <button
+                  key={mode}
+                  onClick={() => setLogScale(mode === 'log')}
+                  style={{
+                    ...btnBase,
+                    background: active ? 'rgba(242,240,229,0.1)' : 'transparent',
+                    borderColor: active ? '#F2F0E5' : '#3a3a3a',
+                    color: active ? '#F2F0E5' : '#64748b',
+                    opacity: active ? 1 : 0.45,
+                  }}
+                >{mode}</button>
+              );
+            })}
+          </span>
         </div>
       )}
       <div style={{ height: isMobile ? 320 : 480 }}>

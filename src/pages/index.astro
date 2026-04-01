@@ -73,10 +73,102 @@ import ComplexityChart from '../components/ComplexityChart';
   <ChartSection
     id="complexity"
     title="Software Complexity Growth"
-    subtitle="Key complexity indicators · 1970–2026 · linear scale"
+    subtitle="Key complexity indicators · 1970–2026"
   >
     <ComplexityChart client:only="react" />
+
+    <div class="complexity-metrics">
+      <div class="complexity-metric">
+        <h3><span class="metric-dot" style="background:#e879f9;"></span>Decision Points incl. Dependencies</h3>
+        <p>
+          Every <code>if</code>, loop, and pattern-match in your project is a decision point — a place where
+          behavior can diverge and a bug can hide. Modern applications ship with thousands of transitive
+          dependencies, each adding their own branching logic. This metric estimates the total number of
+          decision points across a project and its dependency tree. It's the single best proxy for how
+          much behavior a senior developer is implicitly responsible for when they hit "deploy".
+        </p>
+      </div>
+
+      <div class="complexity-metric">
+        <h3><span class="metric-dot" style="background:#60a5fa;"></span>Linux Kernel Lines of Code</h3>
+        <p>
+          The Linux kernel is the most widely deployed piece of software on earth — it runs phones,
+          servers, cars, and satellites. Its growth is a reliable thermometer for how complex the
+          underlying platform has become. When the kernel doubles, drivers, syscalls, and edge cases
+          double with it, and every layer built on top inherits that complexity.
+        </p>
+      </div>
+
+      <div class="complexity-metric">
+        <h3><span class="metric-dot" style="background:#4ade80;"></span>npm Packages</h3>
+        <p>
+          npm is the world's largest package registry and a proxy for ecosystem fragmentation.
+          More packages means more choices for every task, more transitive dependencies to audit, and
+          more surface area for supply-chain attacks. A senior developer in 2010 might have evaluated
+          a handful of libraries; today they inherit hundreds the moment they scaffold a project.
+        </p>
+      </div>
+
+      <div class="complexity-metric">
+        <h3><span class="metric-dot" style="background:#f87171;"></span>CVEs per Year</h3>
+        <p>
+          The number of publicly disclosed vulnerabilities each year reflects the security burden on
+          every team. More CVEs means more patches to apply, more dependency upgrades to evaluate,
+          and more time spent on security reviews instead of features. It's a direct measure of the
+          "maintenance tax" that complexity imposes.
+        </p>
+      </div>
+
+      <div class="complexity-metric">
+        <h3><span class="metric-dot" style="background:#fbbf24;"></span>Technologies in a Typical Stack</h3>
+        <p>
+          In 1970, a senior developer needed to know an editor and a language. Today a single
+          full-stack project may touch a framework, a bundler, a type system, a CSS preprocessor,
+          a test runner, a CI pipeline, a container runtime, an orchestrator, a cloud provider, and
+          a dozen SaaS integrations. This metric estimates the number of distinct technologies a
+          senior developer is expected to navigate — and it explains why "just learning the language"
+          stopped being enough decades ago.
+        </p>
+      </div>
+    </div>
   </ChartSection>
+
+  <style>
+    .complexity-metrics {
+      display: grid;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #3a3a3a;
+    }
+    .complexity-metric h3 {
+      font-family: 'Raleway', 'Arial Black', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #F2F0E5;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .metric-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .complexity-metric p {
+      color: #94a3b8;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+    .complexity-metric code {
+      color: #F2F0E5;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.88em;
+    }
+  </style>
 
   <!-- About / Methodology -->
   <section style="padding:3.5rem 2rem;max-width:800px;margin:0 auto;">
