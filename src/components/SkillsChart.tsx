@@ -79,7 +79,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
   const [skills, setSkills] = useState<Skill[]>([]);
   const [categories, setCategories] = useState<Record<string, CategoryMeta>>({});
   const [keyEvents, setKeyEvents] = useState<KeyEvent[]>([]);
-  const [hoveredSkill, setHoveredSkill] = useState<{ name: string; catLabel: string; catColor: string; desc: string; year: number; val: number } | null>(null);
+  const [hoveredSkill, setHoveredSkill] = useState<{ name: string; catLabel: string; catColor: string; desc: string; year: number; val: number; px: number; py: number } | null>(null);
   const [selectedSkill, setSelectedSkill] = useState<typeof hoveredSkill>(null);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -316,6 +316,8 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
         const pt = hoveredDs.data[hoveredPtIdx] as any;
         const year = pt ? Math.round(pt.x) : 0;
         const val = pt ? Number(pt.y) : 0;
+        const meta = chart.getDatasetMeta(hoveredIdx);
+        const pixel = meta.data[hoveredPtIdx];
         const info = {
           name: hoveredDs.label,
           catLabel: hoveredDs._catLabel,
@@ -323,6 +325,8 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
           desc: hoveredDs._desc,
           year,
           val,
+          px: pixel ? pixel.x : 0,
+          py: pixel ? pixel.y : 0,
         };
         setHoveredSkill(info);
       }
@@ -412,6 +416,8 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
           const el = elements[0];
           const ds = chart.data.datasets[el.datasetIndex] as any;
           const pt = ds.data[el.index] as any;
+          const meta = chart.getDatasetMeta(el.datasetIndex);
+          const pixel = meta.data[el.index];
           setSelectedSkill({
             name: ds.label,
             catLabel: ds._catLabel,
@@ -419,6 +425,8 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
             desc: ds._desc,
             year: pt ? Math.round(pt.x) : 0,
             val: pt ? Number(pt.y) : 0,
+            px: pixel ? pixel.x / (window.devicePixelRatio || 1) : 0,
+            py: pixel ? pixel.y / (window.devicePixelRatio || 1) : 0,
           });
         },
       },
@@ -469,86 +477,60 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
         <canvas ref={canvasRef} />
         <canvas ref={overlayRef} style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }} />
 
-        {/* Info badge — absolute on desktop, hidden on mobile (shown below instead) */}
-        {!isMobile && displayedSkill && (
-          <div style={{
-            position: 'absolute',
-            top: 12,
-            right: 12,
-            background: 'rgba(30,30,30,0.92)',
-            border: `1px solid ${displayedSkill.catColor}55`,
-            borderRadius: '0.6rem',
-            padding: '0.55rem 0.9rem',
-            pointerEvents: 'none',
-            maxWidth: 260,
-          }}>
+        {/* Tooltip near hovered point */}
+        {displayedSkill && (() => {
+          const containerW = canvasRef.current?.clientWidth ?? 600;
+          const containerH = isMobile ? 320 : 560;
+          // Position tooltip above the point, offset to the right; flip if near edges
+          const tooltipW = 220;
+          const tooltipH = 52;
+          let left = displayedSkill.px + 12;
+          let top = displayedSkill.py - tooltipH - 12;
+          // Flip horizontally if too close to right edge
+          if (left + tooltipW > containerW) left = displayedSkill.px - tooltipW - 12;
+          // Flip vertically if too close to top
+          if (top < 0) top = displayedSkill.py + 16;
+          // Clamp
+          left = Math.max(4, Math.min(left, containerW - tooltipW - 4));
+          top = Math.max(4, Math.min(top, containerH - tooltipH - 4));
+          return (
             <div style={{
-              fontFamily: 'Raleway, Arial Black, sans-serif',
-              fontWeight: 800,
-              fontSize: '1rem',
-              color: '#F2F0E5',
-              marginBottom: '0.15rem',
+              position: 'absolute',
+              left,
+              top,
+              background: 'rgba(30,30,30,0.95)',
+              border: `1px solid ${displayedSkill.catColor}55`,
+              borderRadius: '0.5rem',
+              padding: '0.4rem 0.7rem',
+              pointerEvents: 'none',
+              maxWidth: tooltipW,
+              zIndex: 10,
               whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
             }}>
-              {displayedSkill.name}
+              <div style={{
+                fontFamily: 'Raleway, Arial Black, sans-serif',
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                color: '#F2F0E5',
+                marginBottom: '0.1rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}>
+                {displayedSkill.name}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem' }}>
+                <span style={{ color: displayedSkill.catColor, fontWeight: 600 }}>
+                  {displayedSkill.catLabel}
+                </span>
+                <span style={{ color: '#64748b' }}>·</span>
+                <span style={{ color: '#FFCD68', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
+                  {displayedSkill.year} → {displayedSkill.val.toFixed(1)}
+                </span>
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ color: displayedSkill.catColor, fontWeight: 600, fontSize: '0.8rem' }}>
-                {displayedSkill.catLabel}
-              </span>
-              <span style={{ color: '#64748b', fontSize: '0.8rem' }}>·</span>
-              <span style={{ color: '#FFCD68', fontWeight: 700, fontSize: '0.85rem', fontVariantNumeric: 'tabular-nums' }}>
-                {displayedSkill.year} → {displayedSkill.val.toFixed(1)}
-              </span>
-            </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
-
-      {/* Mobile info badge — rendered in flow below chart */}
-      {isMobile && displayedSkill && (
-        <div style={{
-          position: 'relative',
-          marginTop: '0.5rem',
-          background: 'rgba(30,30,30,0.92)',
-          border: `1px solid ${displayedSkill.catColor}55`,
-          borderRadius: '0.6rem',
-          padding: '0.55rem 0.9rem',
-        }}>
-          <button
-            onClick={() => setSelectedSkill(null)}
-            style={{
-              position: 'absolute', top: 4, right: 8,
-              color: '#64748b', background: 'none', border: 'none',
-              cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1,
-            }}
-          >×</button>
-          <div style={{
-            fontFamily: 'Raleway, Arial Black, sans-serif',
-            fontWeight: 800,
-            fontSize: '0.95rem',
-            color: '#F2F0E5',
-            marginBottom: '0.15rem',
-            paddingRight: '1.5rem',
-          }}>
-            {displayedSkill.name}
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <span style={{ color: displayedSkill.catColor, fontWeight: 600, fontSize: '0.8rem' }}>
-              {displayedSkill.catLabel}
-            </span>
-            <span style={{ color: '#64748b', fontSize: '0.8rem' }}>·</span>
-            <span style={{ color: '#FFCD68', fontWeight: 700, fontSize: '0.85rem', fontVariantNumeric: 'tabular-nums' }}>
-              {displayedSkill.year} → {displayedSkill.val.toFixed(1)}
-            </span>
-          </div>
-          <div style={{ color: '#94a3b8', lineHeight: 1.5, fontSize: '0.82rem', marginTop: '0.35rem' }}>
-            {displayedSkill.desc}
-          </div>
-        </div>
-      )}
 
     </div>
   );
