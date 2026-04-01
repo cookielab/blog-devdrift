@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import {
   Chart,
   RadarController,
@@ -9,23 +9,14 @@ import {
   Tooltip,
 } from 'chart.js';
 import { useMediaQuery } from './useMediaQuery';
+import { CATEGORIES, CATEGORY_KEYS, CATEGORY_LABELS } from '../constants/chart';
+import { useFetchJson } from '../hooks/useFetchJson';
+import { tooltipStyle } from '../utils/chartDefaults';
 
 Chart.register(RadarController, RadialLinearScale, LineElement, PointElement, Filler, Tooltip);
 
-const CATEGORIES: Record<string, { label: string; color: string; desc: string }> = {
-  technical_core: { label: 'Programming',   color: '#60a5fa', desc: 'Language mastery, algorithms, data structures, refactoring, SQL, design patterns, type systems' },
-  hardware:       { label: 'Hardware',       color: '#b0c4de', desc: 'Memory management, CPU architectures, hardware impact on code performance' },
-  obsluha_kodu:   { label: 'Code Ops',       color: '#67e8f9', desc: 'Debugging, automated testing, version control, software distribution' },
-  architecture:   { label: 'Architecture',   color: '#fb923c', desc: 'System modularity, abstractions, integration, distributed systems, scaling, observability, security, cloud' },
-  product:        { label: 'Product',        color: '#4ade80', desc: 'Product thinking, trade-off prioritization, iterative delivery, CI/CD pipelines' },
-  ux:             { label: 'UX / Frontend',  color: '#c084fc', desc: 'User empathy, implementation usability, accessibility, web performance' },
-  team:           { label: 'Team & Culture', color: '#f87171', desc: 'Tech-business communication, technical negotiation, developer mentoring' },
-  meta:           { label: 'Meta Skills',    color: '#2dd4bf', desc: 'Working with uncertainty, technology radar, personal sustainability, technical writing' },
-  ai:             { label: 'AI & ML',        color: '#FFCD68', desc: 'Prompt engineering, AI output validation, AI workflow orchestration, ML concepts' },
-};
-
-const CAT_KEYS = Object.keys(CATEGORIES);
-const CAT_LABELS = CAT_KEYS.map(k => CATEGORIES[k].label);
+const CAT_KEYS = CATEGORY_KEYS;
+const CAT_LABELS = CATEGORY_LABELS;
 
 const PRESET_YEARS = [1970, 1980, 1990, 2000, 2010, 2020, 2026];
 
@@ -96,7 +87,6 @@ export default function CategoryTrendChart() {
   const chartRef = useRef<Chart | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const justBuiltRef = useRef(false);
-  const [skills, setSkills] = useState<SkillData[]>([]);
   const [selectedYear, setSelectedYear] = useState(2026);
   const [compareYear, setCompareYear] = useState<number | null>(2000);
   const selectedYearRef = useRef(selectedYear);
@@ -104,11 +94,8 @@ export default function CategoryTrendChart() {
   const [labelPositions, setLabelPositions] = useState<{ x: number; y: number; anchor: string }[]>([]);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/skills-timeline.json`)
-      .then(r => r.json())
-      .then(data => setSkills(data.skills));
-  }, []);
+  const rawSkills = useFetchJson<{ skills: SkillData[] }>('data/skills-timeline.json');
+  const skills = rawSkills?.skills ?? [];
 
   // After chart renders, read the radial scale geometry to position HTML labels
   const updateLabelPositions = useCallback(() => {
@@ -190,14 +177,8 @@ export default function CategoryTrendChart() {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: '#252525',
-            borderColor: '#3a3a3a',
-            borderWidth: 1,
-            titleColor: '#F2F0E5',
+            ...tooltipStyle(),
             titleFont: { size: 14, weight: 700 },
-            bodyColor: '#94a3b8',
-            bodyFont: { size: 13 },
-            padding: 14,
             boxWidth: 0,
             boxHeight: 0,
             callbacks: {
