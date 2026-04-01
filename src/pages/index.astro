@@ -74,27 +74,14 @@ import ComplexityChart from '../components/ComplexityChart';
     <div class="complexity-header">
       <h2>Software Complexity Growth</h2>
       <p class="complexity-story">
-        In 1970 a senior developer owned a few hundred lines of code, knew two or three tools, and
-        the entire program fit in one person's head. The platform underneath — an operating system,
-        a compiler, a handful of libraries — was small enough to read. Security meant locking the
-        machine room.
-      </p>
-      <p class="complexity-story">
-        Then everything started compounding. The Linux kernel alone grew from 10,000 lines to over
-        40 million. The npm registry went from zero to 4 million packages in fifteen years, each one
-        a potential link in a dependency chain you never asked for. The number of publicly disclosed
-        vulnerabilities climbed from under a thousand per year to nearly 40,000 — not because
-        developers got worse, but because there was simply more surface area to attack. A typical
-        project stack expanded from 2 technologies to over 80, and the total decision points a
-        developer is responsible for — every branch in their own code plus every branch in their
-        dependencies — jumped from a few hundred to 14 million.
-      </p>
-      <p class="complexity-story">
-        None of these lines grew in isolation. More packages meant more CVEs. More CVEs meant more
-        time patching instead of building. More technologies meant more integration surface, which
-        meant more branches, which meant more places for things to break. The chart below tracks five
-        indicators of this compounding — switch between logarithmic and linear scale to see both the
-        shape of the growth and its sheer magnitude.
+        In 1970 the entire program fit in one person's head — a few hundred lines, two or three tools,
+        security meant locking the machine room. Then everything started compounding. The Linux kernel
+        grew from 10,000 lines to 40 million. npm went from zero to 4 million packages. Disclosed
+        vulnerabilities climbed from under a thousand a year to nearly 40,000. A typical stack expanded
+        from 2 technologies to over 80 — and the total decision points a developer is responsible for
+        jumped from a few hundred to 14 million. None of these grew in isolation: more packages meant
+        more CVEs, more technologies meant more integration surface, more branches meant more places
+        to break.
       </p>
     </div>
 
@@ -178,11 +165,7 @@ import ComplexityChart from '../components/ComplexityChart';
     .complexity-story {
       color: #94a3b8;
       line-height: 1.7;
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-    }
-    .complexity-story:last-child {
-      margin-bottom: 0;
+      font-size: 1rem;
     }
     .complexity-metrics {
       display: grid;
