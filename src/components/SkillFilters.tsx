@@ -1,20 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import SkillsChart from './SkillsChart';
 import { useMediaQuery } from './useMediaQuery';
-
-const CATEGORIES: Record<string, { label: string; color: string }> = {
-  technical_core: { label: 'Programming',   color: '#60a5fa' },
-  hardware:       { label: 'Hardware',       color: '#b0c4de' },
-  obsluha_kodu:   { label: 'Code Ops',       color: '#67e8f9' },
-  architecture:   { label: 'Architecture',   color: '#fb923c' },
-  product:        { label: 'Product',        color: '#4ade80' },
-  ux:             { label: 'UX / Frontend',  color: '#c084fc' },
-  team:           { label: 'Team & Culture', color: '#f87171' },
-  meta:           { label: 'Meta Skills',    color: '#2dd4bf' },
-  ai:             { label: 'AI & ML',        color: '#FFCD68' },
-};
-
-const ALL_KEYS = Object.keys(CATEGORIES);
+import { CATEGORIES, CATEGORY_KEYS } from '../constants/chart';
+import { useFetchJson } from '../hooks/useFetchJson';
 
 interface SkillMeta {
   name: string;
@@ -22,20 +10,14 @@ interface SkillMeta {
 }
 
 export default function SkillFilters() {
-  const [activeCategories, setActiveCategories] = useState<Set<string>>(new Set(ALL_KEYS));
+  const [activeCategories, setActiveCategories] = useState<Set<string>>(new Set(CATEGORY_KEYS));
   const [hiddenSkills, setHiddenSkills] = useState<Set<string>>(new Set());
-  const [skillsList, setSkillsList] = useState<SkillMeta[]>([]);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [breakdown, setBreakdown] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/skills-timeline.json`)
-      .then(r => r.json())
-      .then(data => {
-        setSkillsList(data.skills.map((s: any) => ({ name: s.name, category: s.category })));
-      });
-  }, []);
+  const rawSkills = useFetchJson<{ skills: { name: string; category: string }[] }>('data/skills-timeline.json');
+  const skillsList: SkillMeta[] = rawSkills ? rawSkills.skills.map(s => ({ name: s.name, category: s.category })) : [];
 
   function toggleCategory(key: string) {
     setActiveCategories(prev => {
@@ -114,7 +96,7 @@ export default function SkillFilters() {
   });
 
   function selectAll() {
-    setActiveCategories(new Set(ALL_KEYS));
+    setActiveCategories(new Set(CATEGORY_KEYS));
     setHiddenSkills(new Set());
   }
 
@@ -130,7 +112,7 @@ export default function SkillFilters() {
     });
   }
 
-  const allActive = activeCategories.size === ALL_KEYS.length;
+  const allActive = activeCategories.size === CATEGORY_KEYS.length;
   const noneActive = activeCategories.size === 0;
 
   const utilBtnStyle = (isActive: boolean): React.CSSProperties => ({
