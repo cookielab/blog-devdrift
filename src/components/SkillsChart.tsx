@@ -404,7 +404,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
               ds.borderColor = ds._origColor;
               ds.borderWidth = ds._origWidth;
             });
-            chart.update('none');
+            chart.update();
             drawOverlay(chart, null);
             return;
           }
@@ -444,7 +444,7 @@ export default function SkillsChart({ activeCategories, hiddenSkills, viewMode }
         ds.borderWidth = ds._origWidth;
       });
     }
-    chart.update('none');
+    chart.update();
     setHoveredSkill(null);
     setSelectedSkill(null);
     drawOverlay(chart, null);
