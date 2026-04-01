@@ -180,7 +180,7 @@ export default function SkillFilters() {
               >
                 {cat.label}
               </button>
-              {!isMobile && hasMultipleSkills && (
+              {hasMultipleSkills && (
                 <button
                   className="sf-btn"
                   onClick={() => toggleExpand(key)}
@@ -191,7 +191,7 @@ export default function SkillFilters() {
                 </button>
               )}
             </div>
-            {!isMobile && isExpanded && isActive && (
+            {isExpanded && isActive && (
               <div style={{
                 display: 'flex',
                 flexWrap: 'wrap',
