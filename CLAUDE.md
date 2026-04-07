@@ -92,7 +92,12 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, Tooltip);
 3. Provide values for all years 1970–2026 following S-curve shape
 4. No code changes needed — charts load data dynamically
 
-## Deployment (future)
-Cloudflare Pages via GitHub Actions with `cloudflare/wrangler-action`.
-Secrets needed: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
-Project name: `devdrift-dev`. Build output: `devdrift/dist/`.
+## Deployment
+GitHub Pages via GitHub Actions (`.github/workflows/deploy.yml`). Every push to `main` builds and publishes `dist/`.
+
+## Analytics
+Google Tag Manager is injected into `BaseLayout.astro` when `PUBLIC_GTM_ID` is set at build time. GA4 is configured inside the GTM container (not in code), so tag changes never require a redeploy.
+
+- Local: set `PUBLIC_GTM_ID=GTM-XXXXXXX` in `devdrift/.env` (gitignored).
+- CI: set a repository **Variable** `PUBLIC_GTM_ID` in GitHub → Settings → Secrets and variables → Actions → Variables. The deploy workflow passes it to the build step via `env:`.
+- When unset, the snippet is omitted entirely (graceful no-op for local dev).

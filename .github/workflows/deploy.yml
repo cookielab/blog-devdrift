@@ -26,6 +26,8 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+        env:
+          PUBLIC_GTM_ID: ${{ vars.PUBLIC_GTM_ID }}
 
       - uses: actions/upload-pages-artifact@v3
         with:
